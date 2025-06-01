@@ -2,9 +2,6 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const bodyParser = require("body-parser");
-const bcrypt = require("bcryptjs");
-// const db = require("./firebase");
 const cors = require("cors");
 
 var indexRouter = require("./routes/index");
