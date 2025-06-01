@@ -82,6 +82,9 @@ function onError(error) {
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  const postmanDocs =
+    "https://documenter.getpostman.com/view/45372812/2sB2qgedtV#54c46c5a-cb38-4eb0-9ebc-eef966107c7b";
   console.log("Listening on http://localhost:" + addr.port);
+  console.log("Posstman docs: " + postmanDocs + "\n");
   debug("Listening on " + bind);
 }
