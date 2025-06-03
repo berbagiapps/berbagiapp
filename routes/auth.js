@@ -7,6 +7,8 @@ const { hashPassword } = require("../lib/bcrypt");
 const { validateRole } = require("../lib/validate");
 const crypto = require("crypto");
 const { generateToken } = require("../lib/jsonWebToken");
+const authenticateUser = require("../middleware/authMiddleware");
+const { send } = require("process");
 const usersCollection = db.collection("users");
 
 router.get("/user", function (req, res, next) {
@@ -86,5 +88,26 @@ router.post("/register", validateRole, async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+
+router.post(
+  "/forget-password",
+  authenticateUser,
+  async function (req, res, next) {
+    const user = req.user;
+    const urlCallback = "http://localhost:5173/change-password";
+    const result = sendEmail(
+      user.email,
+      "Reset Password",
+      `Hello ${user.name},\n\nPlease click the link below to reset your password:\n\n${urlCallback}?token=${user.id}\n\nThank you!`
+    );
+    if (!result.includes("Failed")) {
+      return res.status(200).send({ message: result });
+    } else {
+      return res.status(500).send({ message: result });
+    }
+
+    //const { email } = req.body;
+  }
+);
 
 module.exports = router;
