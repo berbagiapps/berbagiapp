@@ -4,7 +4,7 @@ const authenticateUser = require("../middleware/authMiddleware");
 const db = require("../firebase");
 const usersCollection = db.collection("users");
 
-router.get("/:id", async (req, res) => {
+router.get("/detail/:id", async (req, res) => {
   const userId = req.params.id; // Accessing path parameter
 
   try {
@@ -12,23 +12,23 @@ router.get("/:id", async (req, res) => {
     if (!userDoc.exists) {
       return res.status(404).send({ message: "User not found" });
     }
-    res.status(200).send({ user: userDoc.data() });
+    res.status(200).send({ data: userDoc.data() });
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 
 router.get("/me", authenticateUser, async (req, res) => {
   const user = req.user;
-
+  console.log("Authenticated user:", user);
   try {
     const userDoc = await usersCollection.doc(user.id).get();
     if (!userDoc.exists) {
       return res.status(404).send({ message: "User not found" });
     }
-    res.status(200).send({ user: userDoc.data() });
+    res.status(200).send({ data: userDoc.data() });
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({ message: error.message });
   }
 });
 

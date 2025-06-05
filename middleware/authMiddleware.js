@@ -10,6 +10,10 @@ const authenticateUser = (req, res, next) => {
 
   const token = authHeader.split(" ")[1]; // Extract the token
 
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorized: No token provided" });
+  }
+
   try {
     const decoded = jwt.verify(token, secretKey); // Validate the token
     req.user = decoded; // Attach decoded user data to request
