@@ -4,6 +4,8 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 
+require("dotenv").config();
+
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var authRouter = require("./routes/auth");
@@ -28,11 +30,11 @@ app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 
 // Serve static files from Vue build
-app.use(express.static(path.join(__dirname, 'frontend/dist')));
+app.use(express.static(path.join(__dirname, "frontend/dist")));
 
 // For SPA routing (history mode)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+app.get("/view*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/dist/index.html"));
 });
 
 module.exports = app;
