@@ -1,6 +1,6 @@
 How to start
-1.pnpm i
-2.pnpm dev
+1. pnpm i
+2. pnpm dev
 
 How to activate front-end capability for "reset-password"
 1. cd frontend
