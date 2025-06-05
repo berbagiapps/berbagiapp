@@ -13,7 +13,7 @@ const router = createRouter({
       component: ChangePasswordNoCurrent,
     },
     {
-      path: "/",
+      path: "/api-test",
       name: "about",
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
