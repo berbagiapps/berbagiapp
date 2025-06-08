@@ -84,7 +84,15 @@ function onListening() {
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   const postmanDocs =
     "https://documenter.getpostman.com/view/45372812/2sB2qgedtV#54c46c5a-cb38-4eb0-9ebc-eef966107c7b";
-  console.log("Listening on http://localhost:" + addr.port);
-  console.log("Posstman docs: " + postmanDocs + "\n");
+  const postmanWorkspace =
+    "https://web.postman.co/workspace/7a567b89-0789-474c-8d3e-ab5009233883 (can contribute if you have access)";
+  const linkFirebase =
+    "https://console.firebase.google.com/project/berbagi2025 (for db access, can enter if you have access)";
+
+  console.log("Postman docs: " + postmanDocs);
+  console.log("Postman shareWorkspace: " + postmanWorkspace);
+  console.log("DB access: " + linkFirebase);
+
+  console.log("Listening on http://localhost:" + addr.port + "\n");
   debug("Listening on " + bind);
 }
