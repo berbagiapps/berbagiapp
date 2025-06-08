@@ -75,7 +75,7 @@ router.post("/register", validateRole, async (req, res) => {
       //if user exist but not active, send activation email again
       if (querySnapshot?.docs[0]?.data()?.isActive === false) {
         sendActivationEmail(email);
-        return res.status(200).send({
+        return res.status(400).send({
           message:
             "User already exists but not active, activation email sent again",
         });
@@ -278,7 +278,7 @@ const sendActivationEmail = async (email) => {
       `If you did not register, please ignore this email.\n\nThank you!`
   );
   if (!result.includes("Failed")) {
-    console.log("Activation email sent successfully");
+    console.log("email sent successfully");
   } else {
     console.error("Failed to send activation email:", result);
   }
