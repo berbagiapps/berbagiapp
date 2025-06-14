@@ -169,7 +169,7 @@ router.post("/forget-password", async function (req, res, next) {
         `You requested to reset your password. If you did not request this, please ignore this email.\n\n` +
         `To reset your password, please click the link below:\n\n${urlCallback}?email=${email}&token=${token}\n\nThank you!`,
     });
-    return res.status(200).send({ message: result });
+    return res.status(200).send({ message: result,token:token });
   } catch (error) {
     console.error("Email send failed:", error);
     res
