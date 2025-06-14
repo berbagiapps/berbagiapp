@@ -126,10 +126,32 @@ router.post("/forget-password", async function (req, res, next) {
   }
   const baseUrl = process.env.BASE_URL_FRONTEND; // || "http://localhost:3000";
   const urlCallback = baseUrl + "/view/change-password";
+  const nodemailer = require("nodemailer");
+  let testAccount = await nodemailer.createTestAccount(); // ✅ test akun gratis
 
   // Generate a unique token for password reset
   const token = crypto.randomBytes(32).toString("hex");
-
+  const transporter = nodemailer.createTransport({
+    // host: testAccount.smtp.host,
+    // port: testAccount.smtp.port,
+    // secure: testAccount.smtp.secure,
+    // auth: {
+    //   user: testAccount.user,
+    //   pass: testAccount.pass,
+    // },
+    host: "smtp.mailersend.net",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS, // API Key dari Brevo
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    // logger: true,
+    // debug: true,
+  });
   await tokensCollection.add({
     email,
     token,
@@ -137,17 +159,26 @@ router.post("/forget-password", async function (req, res, next) {
     expiresAt: new Date(Date.now() + 3600000), // Token valid for 1 hour
   });
 
-  const result = await sendEmail(
-    email,
-    "Reset Password",
-    `You requested to reset your password. If you did not request this, please ignore this email.\n\n` +
-      `To reset your password, please click the link below:\n\n${urlCallback}?email=${email}&token=${token}\n\nThank you!`
-  );
-  if (!result?.includes("Failed")) {
+  try {
+    const result = await transporter.sendMail({
+      from: '"Berbagi App" <MS_FU1HsN@test-q3enl6k89o742vwr.mlsender.net>', // ✅ HARUS valid
+      to: email,
+      subject: "Reset Password",
+      text:
+        "Reset Password\n" +
+        `You requested to reset your password. If you did not request this, please ignore this email.\n\n` +
+        `To reset your password, please click the link below:\n\n${urlCallback}?email=${email}&token=${token}\n\nThank you!`,
+    });
     return res.status(200).send({ message: result });
-  } else {
-    return res.status(500).send({ message: result });
+  } catch (error) {
+    console.error("Email send failed:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to send email" + error.toString() });
+    return;
   }
+
+  
 });
 
 router.post("/change-password-by-token", async function (req, res, next) {
