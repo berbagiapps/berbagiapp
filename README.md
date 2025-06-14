@@ -1,26 +1,30 @@
 * if using npm *
 
-Rename .env.local ke .env
-npm install
-npm run dev
+Build front-end for "reset-password"
 
-How to activate front-end capability for "reset-password"
+cd frontend,
+npm install,
+npm run build,
+cd ..
 
-cd frontend
-npm install
-npm run build
+Rename .env.local ke .env,
+npm install,
+npm run dev,
 
 
 * if using pnpm *
 
-npm install -g pnpm
+npm install -g pnpm,
 
-Rename .env.local ke .env
-pnpm i
-pnpm dev
+Build front-end for "reset-password"
 
-How to activate front-end capability for "reset-password"
+cd frontend,
+pnpm i,
+pnpm build,
+cd ..,
 
-cd frontend
-pnpm i
-pnpm build
+Rename .env.local ke .env,
+pnpm i,
+pnpm dev,
+
+
