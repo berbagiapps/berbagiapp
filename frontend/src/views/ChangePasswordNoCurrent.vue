@@ -94,9 +94,9 @@ export default {
         console.error("Error changing password:", error);
         this.errorMessage =
           "Failed to update password. Please try again. " +
-            error.response?.data?.message ||
-          error.message ||
-          error;
+          (error.response?.data?.message ||
+            error.message ||
+            JSON.stringify(error));
       } finally {
         this.loading = false;
       }
