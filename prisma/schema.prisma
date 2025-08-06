@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// Enum untuk melacak status permintaan
+enum RequestStatus {
+  OPEN      // Permintaan masih dibuka
+  FULFILLED // Permintaan sudah terpenuhi
+  CANCELLED // Permintaan dibatalkan
+}
+
+// Model untuk Campaign (TIDAK BERUBAH)
+model Campaign {
+  id                String   @id @default(cuid())
+  title             String
+  description       String
+  targetAmount      Float
+  currentAmount     Float    @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  creatorFirebaseId String
+  
+  // Relasi ke Donation yang lama bisa dihapus jika tidak dipakai lagi
+  // donations         Donation[]
+}
+
+// --- MODEL BARU UNTUK PERMINTAAN DONASI BARANG ---
+model DonationRequest {
+  id                  String   @id @default(cuid())
+  
+  // Info Requestor
+  requestorFirebaseId String   // ID dari Firebase Auth
+  requestorName       String   // Nama pemohon
+  
+  // Info Lokasi
+  locationDescription String   // Alamat atau deskripsi lokasi
+  latitude            Float?   // Opsional
+  longitude           Float?   // Opsional
+  
+  // Info Donasi
+  description         String   // Penjelasan kenapa butuh donasi
+  itemType            String   // Jenis barang yang dibutuhkan (mis: "Pakaian", "Beras")
+  itemWeight          Float?   // Perkiraan berat barang (opsional)
+  weightUnit          String?  // Satuan berat (mis: "kg", "liter") (opsional)
+
+  // Status & Timestamps
+  status              RequestStatus @default(OPEN) // Status default adalah OPEN
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}

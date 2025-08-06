@@ -4,11 +4,14 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 
-require("dotenv").config();
+require("dotenv").config({ path: ".env.local" });
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var authRouter = require("./routes/auth");
+
+// var campaignsRouter = require("./routes/campaigns"); // Router baru
+var donationRequestsRouter = require("./routes/donationRequests"); // Router baru
 
 var app = express();
 app.use(
@@ -28,6 +31,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+
+// app.use("/campaigns", campaignsRouter); // Rute baru
+app.use("/donation-requests", donationRequestsRouter); // Rute baru
 
 // Serve static files from Vue build
 app.use(express.static(path.join(__dirname, "frontend/dist")));
