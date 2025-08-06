@@ -9,7 +9,7 @@ cd ..
 
 Rename .env.local ke .env,
 npm install,
-npx prisma generate
+npx prisma generate,
 npm run dev,
 
 
@@ -26,8 +26,8 @@ cd ..,
 
 Rename .env.local ke .env,
 pnpm i,
-pnpm approve-builds, check all prisma with space button, and enter
-npx prisma generate
+pnpm approve-builds, check all prisma with space button, and enter;
+npx prisma generate;
 pnpm dev,
 
 
