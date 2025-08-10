@@ -52,4 +52,24 @@ model DonationRequest {
   status              RequestStatus @default(OPEN) // Status default adalah OPEN
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
+
+  // Relasi ke fulfillment
+  fulfillments DonationFulfillment[]
+}
+
+// --- MODEL BARU UNTUK MENCATAT PEMENUHAN DONASI (DARI DONATUR) ---
+model DonationFulfillment {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Info Donatur
+  donorFirebaseId String // ID Firebase dari donatur
+  donorName       String // Nama donatur
+  donorNotes      String? // Catatan dari donatur (opsional)
+
+  // Relasi ke Permintaan Donasi yang dipenuhi
+  // Ini akan menghubungkan donasi ini ke permintaan spesifik
+  donationRequestId String
+  donationRequest   DonationRequest @relation(fields: [donationRequestId], references: [id])
 }
