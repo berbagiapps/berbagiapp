@@ -10,18 +10,20 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var authRouter = require("./routes/auth");
 
-// var campaignsRouter = require("./routes/campaigns"); // Router baru
-var donationRequestsRouter = require("./routes/donationRequests"); // Router baru
+// var campaignsRouter = require("./routes/campaigns");
+var donationRequestsRouter = require("./routes/donationRequests");
+// --- 1. TAMBAHKAN BARIS INI UNTUK MENGIMPOR ROUTER BARU ---
+var donationFulfillmentsRouter = require("./routes/donationFulfillments");
 
 var app = express();
 app.use(
   cors({
-    origin: "*", // Allows requests from anywhere
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-//app.use(bodyParser.json());
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -32,8 +34,10 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 
-// app.use("/campaigns", campaignsRouter); // Rute baru
-app.use("/donation-requests", donationRequestsRouter); // Rute baru
+// app.use("/campaigns", campaignsRouter);
+app.use("/donation-requests", donationRequestsRouter);
+// --- 2. TAMBAHKAN BARIS INI UNTUK MENGGUNAKAN ROUTER BARU ---
+app.use("/fulfillments", donationFulfillmentsRouter);
 
 // Serve static files from Vue build
 app.use(express.static(path.join(__dirname, "frontend/dist")));
