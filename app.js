@@ -12,6 +12,7 @@ var authRouter = require("./routes/auth");
 
 // var campaignsRouter = require("./routes/campaigns"); // Router baru
 var donationRequestsRouter = require("./routes/donationRequests"); // Router baru
+var fundDonationRequestsRouter = require("./routes/fundDonationHistoryRequest"); // Router baru
 
 var app = express();
 app.use(
@@ -34,6 +35,8 @@ app.use("/auth", authRouter);
 
 // app.use("/campaigns", campaignsRouter); // Rute baru
 app.use("/donation-requests", donationRequestsRouter); // Rute baru
+
+app.use("/funddonation-requests", fundDonationRequestsRouter); // Rute baru
 
 // Serve static files from Vue build
 app.use(express.static(path.join(__dirname, "frontend/dist")));
