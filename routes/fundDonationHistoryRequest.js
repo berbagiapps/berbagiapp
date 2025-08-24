@@ -5,7 +5,7 @@ const authenticateUser = require("../middleware/authMiddleware");
 
 /**
  * @route   POST /funddonation-requests
- * @desc    Membuat permintaan donasi barang baru
+ * @desc    Membuat permintaan donasi uang baru
  * @access  Private (Harus login)
  */
 router.post("/", authenticateUser, async (req, res) => {
@@ -39,6 +39,9 @@ router.post("/", authenticateUser, async (req, res) => {
       },
     });
 
+    // Tambahkan program untuk mengecek bagaimana pembayaran diproses jika diperlukan
+    newDonationRequest.paymentProcess = paymentProcess || "PENDING";
+
     // Kirim respons sukses
     res.status(201).json({
       message: "Rekaman donasi berhasil dibuat!",
@@ -54,7 +57,7 @@ router.post("/", authenticateUser, async (req, res) => {
 // router.get("/", ...);
 /**
  * @route   Get /funddonation-requests
- * @desc    Mengembalikan semua permintaan donasi barang
+ * @desc    Mengembalikan semua permintaan donasi uang
  * @access  Public 
  */
 router.get("/", async (req, res) => {
@@ -73,7 +76,7 @@ router.get("/", async (req, res) => {
 
 /**
  * @route   Get /funddonation-requests/user
- * @desc    Mengembalikan semua permintaan donasi barang berdasarkan user
+ * @desc    Mengembalikan semua sejarah donasi uang dari user yang sedang login
  * @access  Private (Harus login)
  */
 router.get("/user", authenticateUser,async (req, res) => {
