@@ -82,4 +82,72 @@ router.post("/", authenticateUser, async (req, res) => {
   }
 });
 
+/**
+ * @route   Get /donation-fulfillments
+ * @desc    Mengembalikan donasi
+ * @access  Public 
+ */
+router.get("/", async (req, res) => {
+  try {
+    const donationFulfillments = await prisma.donationFulfillment.findMany();
+
+    res.status(200).json({
+      message: "",
+      data: donationFulfillments,
+    });
+  } catch (error) {
+    console.error("Gagal Get /donation-fulfillments:", error);
+    res.status(500).send({ message: "Terjadi kesalahan pada server."+ error.message });
+  }
+});
+
+/**
+ * @route   Get /donation-fulfillments/user
+ * @desc    Mengembalikan semua donasi barang berdasarkan user
+ * @access  Private (Harus login)
+ */
+router.get("/user", authenticateUser ,async (req, res) => {
+  const userId = req.user.id;
+  // const userId = "SJFRBQUF7pXxGLhYUtzT"; // dummy id for testing
+
+  try {
+    const donationFulfillments = await prisma.donationFulfillment.findMany({
+      where: {
+        donorFirebaseId: userId,
+      },
+    });
+
+    res.status(200).json({
+      message: "",
+      data: donationFulfillments,
+    });
+  } catch (error) {
+    console.error("Gagal Get /donation-fulfillments/user:", error);
+    res.status(500).send({ message: "Terjadi kesalahan pada server."+ error.message });
+  }
+});
+
+router.get("/by-donation-request", requireQueryParams("donationRequestId"), 
+async (req, res) => {
+  const { donationRequestId } = req.query;
+  // const donationRequestId = "SJFRBQUF7pXxGLhYUtzT"; // dummy id for testing
+
+  try {
+    const donationFulfillments = await prisma.donationFulfillment.findMany({
+      where: {
+        donationRequestId,
+      },
+    });
+
+    res.status(200).json({
+      message: "",
+      data: donationFulfillments,
+    });
+  } catch (error) {
+    console.error("Gagal Get /donation-fulfillments/user:", error);
+    res.status(500).send({ message: "Terjadi kesalahan pada server."+ error.message });
+  }
+});
+
+
 module.exports = router;
