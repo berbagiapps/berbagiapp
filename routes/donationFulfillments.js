@@ -5,6 +5,7 @@ var router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const authenticateUser = require("../middleware/authMiddleware");
+const requireQueryParams = require("../middleware/requireQueryParams.ts");
 
 /**
  * @route   POST /fulfillments
