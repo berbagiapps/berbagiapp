@@ -1,0 +1,10 @@
+
+Command	        Purpose
+migrate dev	    Dev workflow: creates + applies migration + regenerates client
+migrate deploy	Production workflow: applies existing migrations only
+db push	        Directly syncs schema to DB (no migration files) — good for prototyping
+migrate reset	Resets DB and reapplies all migrations — useful for testing
+
+npx prisma migrate dev --name your_migration_name
+npx prisma migrate dev 
+npx prisma migrate diff
