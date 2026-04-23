@@ -22,13 +22,13 @@ router.post("/login", async function (req, res, next) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).send({ message: "Email and password are required" });
+    return res.status(401).send({ message: "Email and password are required" });
   }
 
   const querySnapshot = await usersCollection.where("email", "==", email).get();
 
   if (querySnapshot.empty) {
-    return res.status(404).send({ message: "Email not found" });
+    return res.status(401).send({ message: "Email not found" });
   }
 
   const userDoc = querySnapshot.docs[0].data();
@@ -42,7 +42,7 @@ router.post("/login", async function (req, res, next) {
 
   // Check if user is active
   if (!userDoc.isActive) {
-    return res.status(403).send({
+    return res.status(401).send({
       message: "Account is not active. Please check your email for activation.",
     });
   }
@@ -124,8 +124,10 @@ router.post("/forget-password", async function (req, res, next) {
   if (querySnapshot.empty) {
     return res.status(404).send({ message: "Email is not registered" });
   }
-  const baseUrl = process.env.BASE_URL_FRONTEND; // || "http://localhost:3000";
-  const urlCallback = baseUrl + "/view/change-password";
+  const baseUrl = process.env.BASE_URL_FRONTEND;
+   // || "http://localhost:3000";
+  console.log(baseUrl);
+   const urlCallback = baseUrl + "/view/change-password";
   const nodemailer = require("nodemailer");
   let testAccount = await nodemailer.createTestAccount(); // ✅ test akun gratis
 
@@ -139,12 +141,12 @@ router.post("/forget-password", async function (req, res, next) {
     //   user: testAccount.user,
     //   pass: testAccount.pass,
     // },
-    host: "smtp.mailersend.net",
+    host: "smtp.gmail.com",
     port: 587,
     secure: false,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS, // API Key dari Brevo
+      user:"gita.refina5@gmail.com",
+      pass: "lwvekyptjvzzqkwd", // API Key dari gmail
     },
     tls: {
       rejectUnauthorized: false,
@@ -161,7 +163,7 @@ router.post("/forget-password", async function (req, res, next) {
 
   try {
     const result = await transporter.sendMail({
-      from: '"Berbagi App" <MS_FU1HsN@test-q3enl6k89o742vwr.mlsender.net>', // ✅ HARUS valid
+      from: "githa@stem.or.id", // ✅ HARUS valid
       to: email,
       subject: "Reset Password",
       text:

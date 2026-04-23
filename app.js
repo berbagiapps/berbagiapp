@@ -15,7 +15,9 @@ var donationRequestsRouter = require("./routes/donationRequests");
 // --- 1. TAMBAHKAN BARIS INI UNTUK MENGIMPOR ROUTER BARU ---
 var donationFulfillmentsRouter = require("./routes/donationFulfillments");
 var fundDonationRequestsRouter = require("./routes/fundDonationHistoryRequest"); // Router baru
+var chatRoomRouter = require("./routes/chatRoom");
 
+const { initSocket } = require("./socket");
 var app = express();
 app.use(
   cors({
@@ -34,6 +36,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+app.use("/chatRooms", chatRoomRouter);
 
 // app.use("/campaigns", campaignsRouter);
 app.use("/donation-requests", donationRequestsRouter);

@@ -41,17 +41,17 @@ model DonationRequest {
   locationDescription String // Alamat atau deskripsi lokasi
   latitude            Float? // Opsional
   longitude           Float? // Opsional
-
+  city                String? // Kota (opsional)
   // Info Donasi
-  description String // Penjelasan kenapa butuh donasi
-  itemType    String // Jenis barang yang dibutuhkan (mis: "Pakaian", "Beras")
-  itemWeight  Float? // Perkiraan berat barang (opsional)
-  weightUnit  String? // Satuan berat (mis: "kg", "liter") (opsional)
+  description         String // Penjelasan kenapa butuh donasi
+  itemType            String // Jenis barang yang dibutuhkan (mis: "Pakaian", "Beras")
+  itemWeight          Float? // Perkiraan berat barang (opsional)
+  weightUnit          String? // Satuan berat (mis: "kg", "liter") (opsional)
 
   // Status & Timestamps
-  status              RequestStatus @default(OPEN) // Status default adalah OPEN
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  status    RequestStatus @default(OPEN) // Status default adalah OPEN
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   // Relasi ke fulfillment
   fulfillments DonationFulfillment[]
@@ -59,19 +59,81 @@ model DonationRequest {
 
 // --- MODEL BARU UNTUK MENCATAT PEMENUHAN DONASI (DARI DONATUR) ---
 model DonationFulfillment {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Info Donatur
-  donorFirebaseId String // ID Firebase dari donatur
-  donorName       String // Nama donatur
-  donorNotes      String? // Catatan dari donatur (opsional)
-
+  donorFirebaseId   String // ID Firebase dari donatur
+  donorRequestFirebaseId String?
+  donorName         String // Nama donatur
+  donorNotes        String // Catatan dari donatur (opsional)
+  latitude          Float? // Lokasi donatur (opsional)
+  longitude         Float? // Lokasi donatur (opsional)
+  address           String? // Alamat donatur (opsional)
+  city              String? // Kota donatur (opsional)
   // Relasi ke Permintaan Donasi yang dipenuhi
   // Ini akan menghubungkan donasi ini ke permintaan spesifik
   donationRequestId String
   donationRequest   DonationRequest @relation(fields: [donationRequestId], references: [id])
+}
+model User {
+  id    String  @id @default(uuid())
+  name  String?
+
+  // Nama relasi di sini harus sama dengan yang ada di model Chat
+  sentMessages Chat[]           @relation("UserSentChats")
+  readMessages Chat[]           @relation("UserReadBy")
+  
+  rooms        ChatRoomMember[]
+  createdAt    DateTime         @default(now())
+}
+
+model ChatRoom {
+  id          String   @id @default(uuid())
+  roomId      String   @unique
+  lastMessage String   @default("")
+  lastSeen    DateTime @default(now())
+  unreadCount Int      @default(0)
+
+  members ChatRoomMember[]
+  chats   Chat[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatRoomMember {
+  userId String
+  roomId String
+  role   String?
+
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  joinedAt DateTime @default(now())
+
+  @@id([userId, roomId])
+}
+model Chat {
+  id String @id @default(uuid())
+
+  roomId String
+  room   ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  // Pengirim: Menggunakan nama relasi "UserSentChats" agar cocok dengan User
+  senderId String
+  sender   User   @relation("UserSentChats", fields: [senderId], references: [id], onDelete: Cascade)
+
+  message String
+
+  // Pembaca: Menggunakan nama relasi "UserReadBy" agar cocok dengan User
+  readBy User[] @relation("UserReadBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([roomId])
 }
 
 // --- MODEL BARU UNTUK SEJARAH DONASI UANG ---
