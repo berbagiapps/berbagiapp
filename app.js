@@ -12,6 +12,8 @@ var authRouter = require("./routes/auth");
 
 // var campaignsRouter = require("./routes/campaigns");
 var donationRequestsRouter = require("./routes/donationRequests");
+var donationRequestsmentRouter = require("./routes/donationRequestment");
+
 // --- 1. TAMBAHKAN BARIS INI UNTUK MENGIMPOR ROUTER BARU ---
 var donationFulfillmentsRouter = require("./routes/donationFulfillments");
 var fundDonationRequestsRouter = require("./routes/fundDonationHistoryRequest"); // Router baru
@@ -32,7 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
+app.use('/uploads', express.static('uploads'));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
@@ -42,6 +44,7 @@ app.use("/chatRooms", chatRoomRouter);
 app.use("/donation-requests", donationRequestsRouter);
 // --- 2. TAMBAHKAN BARIS INI UNTUK MENGGUNAKAN ROUTER BARU ---
 app.use("/fulfillments", donationFulfillmentsRouter);
+app.use("/donation-requestment", donationRequestsmentRouter);
 
 app.use("/funddonation-requests", fundDonationRequestsRouter); // Rute baru
 

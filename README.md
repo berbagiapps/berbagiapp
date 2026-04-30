@@ -1,11 +1,6 @@
 * if using npm *
 
-Build front-end for "reset-password"
-
-cd frontend,
-npm install,
-npm run build,
-cd ..
+--
 
 Rename .env.local ke .env,
 npm install,

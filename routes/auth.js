@@ -13,11 +13,80 @@ const usersCollection = db.collection("users");
 const tokensCollection = db.collection("tokens");
 const { sendEmail } = require("../lib/sendEmail");
 const e = require("express");
+const prisma = require("../lib/prisma");
+// const { use } = require("react");
 
 // router.get("/users", function (req, res, next) {
 //   res.send("respond with a user resource");
 // });
 
+router.get("/getUser", authenticateUser, async (req, res) => {
+  try {
+    const userId = req.user.id; // 🔥 dari middleware
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    return res.status(200).json({
+      message: "User fetched",
+      data: user,
+    });
+
+  } catch (error) {
+    console.error("GET USER ERROR:", error);
+    return res.status(500).json({
+      message: "Failed to fetch user",
+    });
+  }
+});
+
+router.put("/profile", authenticateUser, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const {
+      name,
+      email,
+      identificationNumber,
+    } = req.body;
+
+    // 🔒 validasi minimal
+    if (!name && !email && !identificationNumber) {
+      return res.status(400).json({
+        message: "No data to update",
+      });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(name && { name }),
+        ...(email && { email }),
+        ...(identificationNumber && { identificationNumber }),
+      },
+    });
+
+    return res.status(200).json({
+      message: "Profile updated",
+      data: updatedUser,
+    });
+
+  } catch (error) {
+    console.error("UPDATE PROFILE ERROR:", error);
+
+    // 🔥 handle email duplicate
+    if (error.code === "P2002") {
+      return res.status(400).json({
+        message: "Email already used",
+      });
+    }
+
+    return res.status(500).json({
+      message: "Failed to update profile",
+    });
+  }
+});
 router.post("/login", async function (req, res, next) {
   const { email, password } = req.body;
 
@@ -25,15 +94,24 @@ router.post("/login", async function (req, res, next) {
     return res.status(401).send({ message: "Email and password are required" });
   }
 
-  const querySnapshot = await usersCollection.where("email", "==", email).get();
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  });
 
-  if (querySnapshot.empty) {
+  if (!user) {
     return res.status(401).send({ message: "Email not found" });
   }
 
-  const userDoc = querySnapshot.docs[0].data();
-  const userId = querySnapshot.docs[0].id;
-  console.log("User found:", userDoc);
+  const userDoc = user;
+  const userId = user.id;
+  const varToken = {
+    id: userId,
+    name: userDoc.name,
+    email: userDoc.email,
+  }
+  console.log("User found:", userDoc, userId);
 
   const isPasswordValid = await bcrypt.compare(password, userDoc.password);
   if (!isPasswordValid) {
@@ -42,75 +120,76 @@ router.post("/login", async function (req, res, next) {
 
   // Check if user is active
   if (!userDoc.isActive) {
+    sendActivationEmail(email);
+
     return res.status(401).send({
       message: "Account is not active. Please check your email for activation.",
     });
   }
 
   const { password: hidepassword, ...userWithoutPassword } = userDoc;
-
   //create a token here
-  const token = generateToken({
-    id: userId,
-    name: userDoc.name,
-    email: userDoc.email,
-    role: userDoc.role,
-  });
+  const token = generateToken(varToken);
 
+  console.log
   res.status(200).send({
     message: "Login success",
     data: { token, user: { id: userId, ...userWithoutPassword } },
   });
 });
-
-router.post("/register", validateRole, async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, identificationNumber } = req.body;
 
-    const querySnapshot = await usersCollection
-      .where("email", "==", email)
-      .get();
+    // 🔍 cek user dulu
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
 
-    if (!querySnapshot.empty) {
-      //if user exist but not active, send activation email again
-      if (querySnapshot?.docs[0]?.data()?.isActive === false) {
+    // ⚠️ kalau user sudah ada
+    if (existingUser) {
+      if (!existingUser.isActive) {
         sendActivationEmail(email);
         return res.status(400).send({
-          message:
-            "User already exists but not active, activation email sent again",
+          message: "User exists but not active, activation email sent again"
         });
       }
 
-      return res.status(400).send({ message: "Email already exists" });
+      return res.status(400).send({
+        message: "Email already exists"
+      });
     }
 
-    // const id = crypto.randomUUID(); // Generate UUID
-    //   await usersCollection.doc(id).set(userDoc);
-
+    // 🔐 hash password
     const hashedPassword = await hashPassword(password);
-    const userDoc = {
-      name,
-      email,
-      role,
-      password: hashedPassword,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      isActive: false,
-    };
 
-    const docRef = await usersCollection.add(userDoc);
-    console.log("User created with ID:", docRef.id);
+    // 🆕 create user
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        role: "user",
+        identificationNumber,
+        password: hashedPassword,
+        isActive: false
+      }
+    });
 
+
+    // 📧 send activation email
     sendActivationEmail(email);
 
-    const { password: hidepassword, ...userWithoutPassword } = userDoc;
-    res.status(201).send({
-      message:
-        "User created successfully, please activate your account in your email",
-      user: userWithoutPassword,
+    const { password: _, ...safeUser } = newUser;
+
+    return res.status(201).send({
+      message: "User created, please activate account",
+      user: safeUser
     });
+
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    return res.status(500).send({
+      message: error.message
+    });
   }
 });
 
@@ -125,27 +204,20 @@ router.post("/forget-password", async function (req, res, next) {
     return res.status(404).send({ message: "Email is not registered" });
   }
   const baseUrl = process.env.BASE_URL_FRONTEND;
-   // || "http://localhost:3000";
+  // || "http://localhost:3000";
   console.log(baseUrl);
-   const urlCallback = baseUrl + "/view/change-password";
+  const urlCallback = baseUrl + "/view/change-password";
   const nodemailer = require("nodemailer");
   let testAccount = await nodemailer.createTestAccount(); // ✅ test akun gratis
 
   // Generate a unique token for password reset
   const token = crypto.randomBytes(32).toString("hex");
   const transporter = nodemailer.createTransport({
-    // host: testAccount.smtp.host,
-    // port: testAccount.smtp.port,
-    // secure: testAccount.smtp.secure,
-    // auth: {
-    //   user: testAccount.user,
-    //   pass: testAccount.pass,
-    // },
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
     auth: {
-      user:"gita.refina5@gmail.com",
+      user: "gita.refina5@gmail.com",
       pass: "lwvekyptjvzzqkwd", // API Key dari gmail
     },
     tls: {
@@ -171,7 +243,7 @@ router.post("/forget-password", async function (req, res, next) {
         `You requested to reset your password. If you did not request this, please ignore this email.\n\n` +
         `To reset your password, please click the link below:\n\n${urlCallback}?email=${email}&token=${token}\n\nThank you!`,
     });
-    return res.status(200).send({ message: result,token:token });
+    return res.status(200).send({ message: result, token: token });
   } catch (error) {
     console.error("Email send failed:", error);
     res
@@ -180,7 +252,7 @@ router.post("/forget-password", async function (req, res, next) {
     return;
   }
 
-  
+
 });
 
 router.post("/change-password-by-token", async function (req, res, next) {
@@ -236,83 +308,95 @@ router.post("/change-password-by-token", async function (req, res, next) {
 });
 
 router.get("/activate-account", async (req, res) => {
-  const { email, token } = req.query;
+  try {
+    const email = String(req.query.email || "").trim();
+    const token = String(req.query.token || "").trim();
 
-  if (!email || !token) {
-    return res.status(400).send("❌ Invalid activation link.");
-  }
+    if (!email || !token) {
+      return res.status(400).send("❌ Invalid activation link.");
+    }
 
-  // Check if the token matches
-  const tokenSnapshot = await tokensCollection
-    .where("email", "==", email)
-    .where("token", "==", token)
-    .get();
-
-  if (tokenSnapshot.empty) {
-    return res.status(404).send("❌ Invalid or expired token.");
-  }
-
-  const tokenDoc = tokenSnapshot.docs[0].data();
-  if (new Date(tokenDoc.expiresAt) < new Date()) {
-    // Delete all expired tokens
-    const expiredTokensSnapshot = await tokensCollection
-      .where("expiresAt", "<", new Date())
-      .get();
-
-    const batch = db.batch();
-    expiredTokensSnapshot.docs.forEach((doc) => {
-      batch.delete(doc.ref);
+    // 🔍 cari token
+    const tokenRecord = await prisma.token.findFirst({
+      where: {
+        email,
+        token
+      }
     });
-    await batch.commit();
 
-    return res.status(400).send("❌ Token has expired.");
+    if (!tokenRecord) {
+      return res.status(404).send("❌ Invalid or expired token.");
+    }
+
+    // ⏰ cek expired
+    if (tokenRecord.expiresAt < new Date()) {
+      // delete token expired
+      await prisma.token.deleteMany({
+        where: { email }
+      });
+
+      return res.status(400).send("❌ Token has expired.");
+    }
+
+    // 🔍 cari user
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user) {
+      return res.status(404).send("❌ User not found.");
+    }
+
+    if (user.isActive) {
+      return res.status(400).send("⚠️ Account already active.");
+    }
+
+    // ✅ activate user
+    await prisma.user.update({
+      where: { email },
+      data: {
+        isActive: true,
+        updatedAt: new Date()
+      }
+    });
+
+    // 🧹 delete token setelah sukses
+    await prisma.token.deleteMany({
+      where: { email }
+    });
+
+    return res.send("✅ Account activated successfully. You can now log in.");
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal server error");
   }
-
-  // Activate the user account
-  const userSnapshot = await usersCollection.where("email", "==", email).get();
-  if (userSnapshot.empty) {
-    return res.status(404).send("❌ User not found.");
-  }
-
-  const userDoc = userSnapshot.docs[0];
-  const user = userDoc.data();
-  if (user.isActive) {
-    return res.status(400).send("⚠️ Account is already active.");
-  }
-
-  // Update user to active
-  await usersCollection.doc(userDoc.id).update({
-    isActive: true,
-    updatedAt: new Date(),
-  });
-
-  res.send("✅ Account activated successfully. You can now log in.");
 });
 
-module.exports = router;
 
-//functions
+
+module.exports = router; // ✅ WAJIB
 const sendActivationEmail = async (email) => {
-  // Send activation email
-  const baseUrl = process.env.BASE_URL_BACKEND; // || "http://localhost:3000";
-  const urlCallback = baseUrl + "/auth/activate-account";
+  const baseUrl = process.env.BASE_URL_BACKEND;
+  const urlCallback = `${baseUrl}/auth/activate-account`;
+
   const token = crypto.randomBytes(32).toString("hex");
-  await tokensCollection.add({
-    email,
-    token,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 3600000), // Token valid for 1 hour
+
+  // ✅ simpan ke prisma (BUKAN firestore)
+  await prisma.token.create({
+    data: {
+      email,
+      token,
+      expiresAt: new Date(Date.now() + 3600000)
+    }
   });
-  const result = await sendEmail(
+
+  await sendEmail(
     email,
     "Activate Your Account",
-    `Thank you for registering. To activate your account, please click the link below:\n\n` +
-      `${urlCallback}?email=${email}&token=${token}\n\n` +
-      `If you did not register, please ignore this email.\n\nThank you!`
+    `Klik link berikut:\n\n${urlCallback}?email=${email}&token=${token}`
   );
-  if (!result.includes("Failed")) {
-    console.log("email sent successfully");
-  } else {
-    console.error("Failed to send activation email:", result);
-  }
 };
+
+
+

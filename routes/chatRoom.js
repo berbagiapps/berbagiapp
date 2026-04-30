@@ -4,97 +4,204 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const authenticateUser = require("../middleware/authMiddleware");
 
-// CREATE / GET CHAT ROOM
+
+// =====================================
+// 1. CREATE / GET ROOM (ANTI P2002)
+// =====================================
 router.post("/create", authenticateUser, async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { otherUserId } = req.body;
+    const currentUserId = req.user.id;
+    const { donationRequestId } = req.body;
 
-    if (!otherUserId) {
-      return res.status(400).send({ message: "otherUserId is required" });
+    if (!donationRequestId) {
+      return res.status(400).json({
+        message: "donationRequestId is required"
+      });
     }
 
-    // 1. 🔍 Cari room (FIX: pakai members, bukan participants)
-    let room = await prisma.chatRoom.findFirst({
-      where: {
-        AND: [
-          {
-            members: {
-              some: { userId: userId }
-            }
-          },
-          {
-            members: {
-              some: { userId: otherUserId }
-            }
-          }
-        ]
-      },
-      include: {
-        members: {
-          include: {
-            user: true
-          }
-        }
-      }
+    const donation = await prisma.donationRequest.findUnique({
+      where: { id: donationRequestId }
     });
 
-    // 2. 🆕 Kalau belum ada → buat
-    if (!room) {
+    if (!donation) {
+      return res.status(404).json({
+        message: "Donation not found"
+      });
+    }
+
+    const fulfillment = await prisma.donationFulfillment.findFirst({
+      where: { donationRequestId }
+    });
+
+    let otherUserId;
+
+    if (currentUserId === donation.requestorFirebaseId) {
+      otherUserId = fulfillment?.donorFirebaseId;
+    } else {
+      otherUserId = donation.requestorFirebaseId;
+    }
+
+    if (!otherUserId || currentUserId === otherUserId) {
+      return res.status(400).json({
+        message: "Invalid chat participants"
+      });
+    }
+
+    const customRoomId =
+      donationRequestId +
+      "_" +
+      [currentUserId, otherUserId].sort().join("_");
+
+    let room;
+
+    try {
       room = await prisma.chatRoom.create({
         data: {
-          roomId: [userId, otherUserId].sort().join("_"), // anti duplicate
+          roomId: customRoomId,
+          donationRequestId,
           members: {
             create: [
-              { userId: userId },
+              { userId: currentUserId },
               { userId: otherUserId }
             ]
           }
         },
         include: {
-          members: {
-            include: {
-              user: true
-            }
-          }
+          members: { include: { user: true } }
         }
       });
+
+    } catch (error) {
+      if (error.code === "P2002") {
+        console.log("ROOM SUDAH ADA → AMBIL EXISTING");
+
+        room = await prisma.chatRoom.findFirst({
+          where: { donationRequestId },
+          include: {
+            members: { include: { user: true } }
+          }
+        });
+
+      } else {
+        throw error;
+      }
     }
 
-    // 3. 🔥 FLATTEN (biar Flutter kamu gampang)
-    const formattedRoom = {
-      id: room.id,
-      roomId: room.roomId,
-      lastMessage: room.lastMessage,
-      participants: room.members.map(m => m.user)
-    };
-
-    res.status(200).send({
+    return res.status(200).json({
       message: "Chat room ready",
-      data: formattedRoom
+      data: {
+        id: room.id,
+        roomId: room.roomId,
+        donationRequestId: room.donationRequestId,
+        participants: room.members.map(m => m.user)
+      }
     });
 
   } catch (error) {
-    console.error("Error creating chat room:", error);
-    res.status(500).send({ message: "Failed to create chat room" });
+    console.error("CREATE ROOM ERROR:", error);
+    return res.status(500).json({
+      message: "Failed to create room"
+    });
   }
 });
 
-router.post("/send", authenticateUser, async (req, res) => {
+router.get("/rooms", authenticateUser, async (req, res) => {
   try {
-    const senderId = req.user.id;
-    const { roomId, message } = req.body;
+    const userId = req.user.id;
 
-    // 1. VALIDASI INPUT
-    if (!roomId || !message) {
-      return res.status(400).json({
-        message: "roomId and message are required"
-      });
-    }
+    const rooms = await prisma.chatRoom.findMany({
+      where: {
+        isActive: true,
+        members: {
+          some: {
+            userId: userId
+          }
+        }
+      },
+      include: {
+        // 🔥 ambil data donation request
+        donation: {
+          select: {
+            id: true,
+            description: true,
+            itemType: true,
+            status: true,
+            city: true
+          }
+        },
 
-    // 2. CEK ROOM EXIST
-    const room = await prisma.chatRoom.findUnique({
-      where: { id: roomId }
+        // 🔥 ambil member + user (SAFE)
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        updatedAt: "desc"
+      }
+    });
+
+    const result = rooms.map(room => {
+      const otherUser = room.members.find(m => m.userId !== userId);
+
+      return {
+        id: room.id,
+        roomId: room.roomId,
+        donationRequestId: room.donationRequestId,
+
+        // 🔥 relasi ke DonationRequest
+        donationRequest: room.donation,
+
+        lastMessage: room.lastMessage,
+        updatedAt: room.updatedAt,
+
+        // 🔥 user lawan chat
+        otherUser: otherUser?.user ?? null
+      };
+    });
+
+    return res.status(200).json({
+      message: "Rooms fetched",
+      data: result
+    });
+
+  } catch (error) {
+    console.error("GET ROOMS ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to fetch rooms"
+    });
+  }
+});
+
+// =====================================
+// 3. GET MESSAGES (🔥 SUPPORT 2 ID)
+// =====================================
+router.get("/:roomId/messages", authenticateUser, async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const userId = req.user.id;
+
+    const room = await prisma.chatRoom.findFirst({
+      where: {
+        OR: [
+          { id: roomId },     // ✅ UUID
+          { roomId: roomId }  // ✅ custom
+        ]
+      },
+      include: {
+        chats: {
+          orderBy: { createdAt: "asc" },
+          include: { sender: true }
+        },
+        members: true
+      }
     });
 
     if (!room) {
@@ -103,19 +210,93 @@ router.post("/send", authenticateUser, async (req, res) => {
       });
     }
 
-    // 3. CREATE MESSAGE
-    const chat = await prisma.chat.create({
+    const isMember = room.members.some(m => m.userId === userId);
+    if (!isMember) {
+      return res.status(403).json({
+        message: "Forbidden"
+      });
+    }
+
+
+    console.log({
+        messages: room.chats.map(chat => ({
+          id: chat.id,
+          roomId: room.roomId,
+          message: chat.message,
+          senderId: chat.senderId,
+          sender: chat.sender,
+          createdAt: chat.createdAt
+        }))
+      });
+    return res.status(200).json({
+      message: "Messages fetched",
       data: {
-        roomId: room.id,
-        senderId,
-        message
-      },
-      include: {
-        sender: true
+        messages: room.chats.map(chat => ({
+          id: chat.id,
+          roomId: room.roomId,
+          message: chat.message,
+          senderId: chat.senderId,
+          sender: chat.sender,
+          createdAt: chat.createdAt
+        }))
       }
     });
 
-    // 4. UPDATE CHAT ROOM (last message)
+  } catch (error) {
+    console.error("GET MESSAGES ERROR:", error);
+    return res.status(500).json({
+      message: "Failed to fetch messages"
+    });
+  }
+});
+
+
+// =====================================
+// 4. SEND MESSAGE (🔥 SUPPORT 2 ID)
+// =====================================
+router.post("/send", authenticateUser, async (req, res) => {
+  try {
+    const { roomId, message } = req.body;
+    const userId = req.user.id;
+
+    if (!roomId || !message) {
+      return res.status(400).json({
+        message: "roomId and message required"
+      });
+    }
+
+    const room = await prisma.chatRoom.findFirst({
+      where: {
+        OR: [
+          { id: roomId },
+          { roomId: roomId }
+        ]
+      },
+      include: { members: true }
+    });
+
+    if (!room) {
+      return res.status(404).json({
+        message: "Room not found"
+      });
+    }
+
+    const isMember = room.members.some(m => m.userId === userId);
+    if (!isMember) {
+      return res.status(403).json({
+        message: "Forbidden"
+      });
+    }
+
+    const chat = await prisma.chat.create({
+      data: {
+        roomId: room.id,
+        senderId: userId,
+        message
+      },
+      include: { sender: true }
+    });
+
     await prisma.chatRoom.update({
       where: { id: room.id },
       data: {
@@ -124,14 +305,14 @@ router.post("/send", authenticateUser, async (req, res) => {
       }
     });
 
-    // 5. RESPONSE SAFE FORMAT
-    return res.status(200).json({
+    return res.status(201).json({
       message: "Message sent",
       data: {
         id: chat.id,
-        roomId: chat.roomId,
+        roomId: room.roomId,
         message: chat.message,
-        sender: chat.sender ?? null,
+        senderId: chat.senderId,
+        sender: chat.sender,
         createdAt: chat.createdAt
       }
     });
@@ -143,90 +324,5 @@ router.post("/send", authenticateUser, async (req, res) => {
     });
   }
 });
-// GET MESSAGES
-router.get("/:roomId/messages", authenticateUser, async (req, res) => {
-  try {
-    const { roomId } = req.params;
 
-    // ⚠️ FIX: field kamu itu roomId, bukan chatRoomId
-    const messages = await prisma.chat.findMany({
-      where: {
-        roomId: roomId
-      },
-      orderBy: {
-        createdAt: "desc"
-      },
-      include: {
-        sender: true
-      }
-    });
-
-    res.status(200).send({
-      message: "Chat messages fetched",
-      data: messages
-    });
-
-  } catch (error) {
-    console.error("Error fetching messages:", error);
-    res.status(500).send({ message: "Failed to fetch messages" });
-  }
-});
-
-
-router.get("/rooms", authenticateUser, async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    // 1. ambil semua room dimana user adalah member
-    const rooms = await prisma.chatRoom.findMany({
-      where: {
-        members: {
-          some: {
-            userId: userId
-          }
-        }
-      },
-      include: {
-        members: {
-          include: {
-            user: true
-          }
-        }
-      },
-      orderBy: {
-        updatedAt: "desc"
-      }
-    });
-
-    // 2. format biar enak di Flutter
-    const formatted = rooms.map((room) => {
-      const otherMembers = room.members
-        .filter((m) => m.userId !== userId)
-        .map((m) => m.user);
-
-      return {
-        id: room.id,
-        roomId: room.roomId,
-        lastMessage: room.lastMessage ?? "",
-        updatedAt: room.updatedAt,
-        members: room.members.map((m) => ({
-          userId: m.userId,
-          user: m.user ?? null
-        })),
-        otherUser: otherMembers[0] ?? null
-      };
-    });
-
-    return res.status(200).json({
-      message: "Rooms fetched successfully",
-      data: formatted
-    });
-
-  } catch (error) {
-    console.error("GET ROOMS ERROR:", error);
-    return res.status(500).json({
-      message: "Failed to fetch chat rooms"
-    });
-  }
-});
 module.exports = router;

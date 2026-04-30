@@ -11,7 +11,8 @@ datasource db {
 enum RequestStatus {
   OPEN // Permintaan masih dibuka
   FULFILLED // Permintaan sudah terpenuhi
-  CANCELLED // Permintaan dibatalkan
+  CANCELLED
+  CONFIRMED // Permintaan dibatalkan
 }
 
 // Model untuk Campaign (TIDAK BERUBAH)
@@ -36,7 +37,7 @@ model DonationRequest {
   // Info Requestor
   requestorFirebaseId String // ID dari Firebase Auth
   requestorName       String // Nama pemohon
-
+  donationType        String?
   // Info Lokasi
   locationDescription String // Alamat atau deskripsi lokasi
   latitude            Float? // Opsional
@@ -53,8 +54,20 @@ model DonationRequest {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
+  photoDonations PhotoDonation[]
+
   // Relasi ke fulfillment
   fulfillments DonationFulfillment[]
+  chatRoom     ChatRoom?
+}
+
+model PhotoDonation {
+  id                String          @id @default(cuid())
+  imageFile         String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  donationRequestId String
+  donationRequest   DonationRequest @relation(fields: [donationRequestId], references: [id])
 }
 
 // --- MODEL BARU UNTUK MENCATAT PEMENUHAN DONASI (DARI DONATUR) ---
@@ -64,49 +77,69 @@ model DonationFulfillment {
   updatedAt DateTime @updatedAt
 
   // Info Donatur
-  donorFirebaseId   String // ID Firebase dari donatur
+  donorFirebaseId        String // ID Firebase dari donatur
   donorRequestFirebaseId String?
-  donorName         String // Nama donatur
-  donorNotes        String // Catatan dari donatur (opsional)
-  latitude          Float? // Lokasi donatur (opsional)
-  longitude         Float? // Lokasi donatur (opsional)
-  address           String? // Alamat donatur (opsional)
-  city              String? // Kota donatur (opsional)
+  donorName              String // Nama donatur
+  donorNotes             String // Catatan dari donatur (opsional)
+  latitude               Float? // Lokasi donatur (opsional)
+  longitude              Float? // Lokasi donatur (opsional)
+  address                String? // Alamat donatur (opsional)
+  city                   String? // Kota donatur (opsional)
   // Relasi ke Permintaan Donasi yang dipenuhi
   // Ini akan menghubungkan donasi ini ke permintaan spesifik
-  donationRequestId String
-  donationRequest   DonationRequest @relation(fields: [donationRequestId], references: [id])
+  donationRequestId      String
+  donationRequest        DonationRequest @relation(fields: [donationRequestId], references: [id])
 }
+
+model Token {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
 model User {
-  id    String  @id @default(uuid())
-  name  String?
+  id                   String  @id @default(uuid())
+  name                 String?
+  email                String? @unique
+  role                 String?
+  password             String?
+  isActive             Boolean @default(true)
+  identificationNumber String?
 
   // Nama relasi di sini harus sama dengan yang ada di model Chat
-  sentMessages Chat[]           @relation("UserSentChats")
-  readMessages Chat[]           @relation("UserReadBy")
-  
-  rooms        ChatRoomMember[]
-  createdAt    DateTime         @default(now())
+  sentMessages Chat[] @relation("UserSentChats")
+  readMessages Chat[] @relation("UserReadBy")
+
+  rooms     ChatRoomMember[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @default(now())
 }
 
 model ChatRoom {
-  id          String   @id @default(uuid())
-  roomId      String   @unique
-  lastMessage String   @default("")
-  lastSeen    DateTime @default(now())
-  unreadCount Int      @default(0)
+  id     String @id @default(uuid())
+  roomId String @unique
+
+  donationRequestId String
+  donation          DonationRequest @relation(fields: [donationRequestId], references: [id], onDelete: Cascade)
+  isActive          Boolean         @default(true)
+  lastMessage       String          @default("")
+  lastSeen          DateTime        @default(now())
+  unreadCount       Int             @default(0)
 
   members ChatRoomMember[]
   chats   Chat[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([donationRequestId]) // 🔥 penting: ini yang kontrol 1 chat per donation
 }
 
 model ChatRoomMember {
   userId String
   roomId String
-  role   String?
 
   user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   room ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
@@ -114,7 +147,9 @@ model ChatRoomMember {
   joinedAt DateTime @default(now())
 
   @@id([userId, roomId])
+  @@index([roomId])
 }
+
 model Chat {
   id String @id @default(uuid())
 

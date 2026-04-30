@@ -51,7 +51,7 @@ router.post("/", authenticateUser, async (req, res) => {
           city
         },
       });
-
+      console.log(newFulfillment);
       res.status(201).json({
         message: "Donasi berhasil dikirim! Terima kasih atas kebaikan Anda.",
         data: newFulfillment,
@@ -176,11 +176,15 @@ router.get("/user", authenticateUser, async (req, res) => {
   try {
     const donationFulfillments = await prisma.donationFulfillment.findMany({
       where: {
-        donorFirebaseId: userId,
+        OR:[
+        {donorFirebaseId: userId},
+                {donorRequestFirebaseId: userId},
+
+        ]
       },
     });
     console.log("ID dari token:", userId);
-
+    console.log(donationFulfillments);
     res.status(200).json({
       message: "",
       data: donationFulfillments,
