@@ -3,8 +3,27 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
+const { exec } = require('child_process');
 
 require("dotenv").config({ path: ".env.local" });
+
+// ==================== PRISMA GENERATE BYPASS BLOCK ====================
+// Menunjuk langsung ke binary dan skema menggunakan path absolut agar tidak tersesat di cPanel
+const prismaBin = path.join(__dirname, 'node_modules', 'prisma', 'bin', 'prisma');
+const schemaPath = path.join(__dirname, 'prisma', 'schema.prisma');
+
+exec(`node ${prismaBin} generate --schema=${schemaPath}`, (error, stdout, stderr) => {
+  if (error) {
+    console.error(`[Prisma Generate Error]: ${error.message}`);
+    return;
+  }
+  if (stderr) {
+    console.error(`[Prisma Generate Stderr]: ${stderr}`);
+    return;
+  }
+  console.log(`[Prisma Generate Success]: ${stdout}`);
+});
+// ======================================================================
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -20,23 +39,7 @@ var fundDonationRequestsRouter = require("./routes/fundDonationHistoryRequest");
 var chatRoomRouter = require("./routes/chatRoom");
 
 const { initSocket } = require("./socket");
-const { exec } = require('child_process');
 
-// Script bypass otomatis push schema saat aplikasi dinyalakan ulang
-exec('./node_modules/prisma/bin/prisma-fmt --version', (err) => {
-  // Kita tembak file binari manual di lokal node_modules tanpa lewat script pembungkus bawaan prisma
-  exec('node ./node_modules/prisma/bin/prisma db push', (error, stdout, stderr) => {
-    if (error) {
-      console.error(`[Prisma Bypass Error]: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`[Prisma Bypass Stderr]: ${stderr}`);
-      return;
-    }
-    console.log(`[Prisma Bypass Success]: ${stdout}`);
-  });
-});
 var app = express();
 app.use(
   cors({
