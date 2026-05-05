@@ -94,49 +94,58 @@ router.post("/login", async function (req, res, next) {
     return res.status(401).send({ message: "Email and password are required" });
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      email: email
-    }
-  });
 
-  if (!user) {
-    return res.status(401).send({ message: "Email not found" });
-  }
-
-  const userDoc = user;
-  const userId = user.id;
-  const varToken = {
-    id: userId,
-    name: userDoc.name,
-    email: userDoc.email,
-  }
-  console.log("User found:", userDoc, userId);
-
-  const isPasswordValid = await bcrypt.compare(password, userDoc.password);
-  if (!isPasswordValid) {
-    return res.status(401).send({ message: "Invalid password" });
-  }
-
-  // Check if user is active
-  if (!userDoc.isActive) {
-    sendActivationEmail(email);
-
-    return res.status(401).send({
-      message: "Account is not active. Please check your email for activation.",
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email
+      }
     });
+
+    if (!user) {
+      return res.status(401).send({ message: "Email not found" });
+    }
+
+    const userDoc = user;
+    const userId = user.id;
+    const varToken = {
+      id: userId,
+      name: userDoc.name,
+      email: userDoc.email,
+    }
+    console.log("User found:", userDoc, userId);
+
+    const isPasswordValid = await bcrypt.compare(password, userDoc.password);
+    if (!isPasswordValid) {
+      return res.status(401).send({ message: "Invalid password" });
+    }
+
+    // Check if user is active
+    if (!userDoc.isActive) {
+      sendActivationEmail(email);
+
+      return res.status(401).send({
+        message: "Account is not active. Please check your email for activation.",
+      });
+    }
+
+    const { password: hidepassword, ...userWithoutPassword } = userDoc;
+    //create a token here
+    const token = generateToken(varToken);
+
+    console.log
+    res.status(200).send({
+      message: "Login success",
+      data: { token, user: { id: userId, ...userWithoutPassword } },
+    });
+  } catch (e) {
+    console.log(e);
+
+
   }
+}
 
-  const { password: hidepassword, ...userWithoutPassword } = userDoc;
-  //create a token here
-  const token = generateToken(varToken);
-
-  console.log
-  res.status(200).send({
-    message: "Login success",
-    data: { token, user: { id: userId, ...userWithoutPassword } },
-  });
-});
+);
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password, identificationNumber } = req.body;

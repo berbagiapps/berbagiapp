@@ -22,6 +22,8 @@ router.post(
     const {
       requestorName,
       locationDescription,
+      detailBarang,
+      alasanDonasi,
       latitude,
       longitude,
       description,
@@ -29,6 +31,7 @@ router.post(
       itemWeight,
       donationType,
       weightUnit,
+      expiredAt
     } = req.body;
 
     const files = req.files || [];
@@ -48,6 +51,8 @@ router.post(
         data: {
           requestorFirebaseId,
           requestorName,
+          expiredAt: expiredAt ? new Date(`${expiredAt}T00:00:00Z`) : null, alasanDonasi,
+          detailBarang,
           locationDescription,
           latitude: latitude ? parseFloat(latitude) : null,
           longitude: longitude ? parseFloat(longitude) : null,
@@ -69,12 +74,14 @@ router.post(
           photoDonations: true,
         },
       });
+      console.log(req.body);
 
       res.status(201).json({
         message: "Permintaan donasi berhasil dibuat!",
         data: newDonationRequest,
       });
     } catch (error) {
+      console.log(error);
       console.error("ERROR:", error);
       res.status(500).json({
         message: "Terjadi kesalahan pada server.",
@@ -142,30 +149,84 @@ router.post(
  * @access  Public 
  */
 router.get("/", async (req, res) => {
-  const page = parseInt(req.query.page) || 1; // Halaman default 1
-  const limit = parseInt(req.query.limit) || 10; // Jumlah item per halaman default 10
+  const search = req.query.search || "";
+  const category = req.query.category || "";
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
   const offset = (page - 1) * limit;
+
   try {
+    const whereCondition = {
+      AND: [
+        // 🔥 STATUS FIX (OPEN OR REQUESTED)
+        {
+          OR: [
+            { status: "OPEN" },
+            { status: "REQUESTED" },
+          ],
+        },
+        category?{
+          donationType:category
+        }:{},
+
+        // 🔍 SEARCH OPTIONAL
+        search
+          ? {
+            OR: [
+              {
+                requestorName: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                locationDescription: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                status:{
+                   contains: search,
+                  mode: "insensitive",
+
+                }
+              },
+              {
+                itemType: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                description: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          }
+          : {},
+      ],
+    };
+
     const [data, total] = await prisma.$transaction([
       prisma.donationRequest.findMany({
-        where: {
-          status: "OPEN", // Hanya ambil yang masih OPEN
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
+        where: whereCondition,
+        orderBy: { createdAt: "desc" },
         skip: offset,
         take: limit,
       }),
+
       prisma.donationRequest.count({
-        where: {
-          status: "OPEN",
-        },
+        where: whereCondition,
       }),
     ]);
-    console.log(data);
-    res.status(200).json({
-      message: "",
+
+    return res.json({
+      message: "Success",
       data,
       pagination: {
         total,
@@ -174,14 +235,11 @@ router.get("/", async (req, res) => {
         totalPages: Math.ceil(total / limit),
       },
     });
-    if (page < 1 || limit < 1) {
-      return res.status(400).json({ message: 'Invalid pagination' });
-    }
   } catch (error) {
-    console.error("Gagal Get /donation-requests:", error);
-    res.status(500).send({ message: "Terjadi kesalahan pada server." });
+    return res.status(500).json({
+      message: "Server error",
+    });
   }
-
 });
 router.get("/get/:id", async (req, res) => {
   const { id } = req.params;
@@ -252,17 +310,35 @@ router.post("/set-to-confirmed/:id", authenticateUser, async (req, res) => {
   }
 });
 
-
 router.get("/requested", authenticateUser, async (req, res) => {
   const userId = req.user.id;
-  const page = parseInt(req.query.page) || 1; // Halaman default 1
-  const limit = parseInt(req.query.limit) || 10; // Jumlah item per halaman default 10
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
   const offset = (page - 1) * limit;
+
   try {
     const [data, total] = await prisma.$transaction([
-      prisma.donationRequest.findMany({
+      prisma.donationRequestment.findMany({
         where: {
-          status: "REQUESTED", // Hanya ambil yang masih OPEN
+          OR: [
+            {
+              requestorId: userId,
+            },
+            {
+              donationRequest: {
+                is: {
+                  requestorFirebaseId: userId,
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          donationRequest: {
+            include: {
+              photoDonations: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
@@ -270,15 +346,31 @@ router.get("/requested", authenticateUser, async (req, res) => {
         skip: offset,
         take: limit,
       }),
-      prisma.donationRequest.count({
+
+      prisma.donationRequestment.count({
         where: {
-          status: "REQUESTED",
+          OR: [
+            {
+              requestorId: userId,
+            },
+            {
+              donationRequest: {
+                is: {
+                  requestorFirebaseId: userId,
+                },
+              },
+            },
+          ],
         },
       }),
     ]);
-    res.status(200).json({
+
+
+
+
+    return res.status(200).json({
       message: "",
-      data,
+      data: data,
       pagination: {
         total,
         page,
@@ -286,16 +378,13 @@ router.get("/requested", authenticateUser, async (req, res) => {
         totalPages: Math.ceil(total / limit),
       },
     });
-    if (page < 1 || limit < 1) {
-      return res.status(400).json({ message: 'Invalid pagination' });
-    }
   } catch (error) {
     console.error("Gagal Get /donation-requests:", error);
-    res.status(500).send({ message: "Terjadi kesalahan pada server." });
+    return res
+      .status(500)
+      .send({ message: "Terjadi kesalahan pada server." });
   }
-
 });
-
 
 router.get("/user", authenticateUser, async (req, res) => {
   const userId = req.user.id;
@@ -306,7 +395,11 @@ router.get("/user", authenticateUser, async (req, res) => {
     const [data, total] = await prisma.$transaction([
       prisma.donationRequest.findMany({
         where: {
-          status: "OPEN", // Hanya ambil yang masih OPEN
+          OR: [
+            { status: "OPEN" },
+            { status: "REQUESTED" },
+
+          ] // Hanya ambil yang masih OPEN
         },
         orderBy: {
           createdAt: "desc",

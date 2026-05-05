@@ -18,7 +18,7 @@ router.post("/", authenticateUser, async (req, res) => {
     donationRequestId,
     donorName,
     donorRequestFirebaseId,
-    
+
     donorNotes,
     latitude,
     longitude,
@@ -36,7 +36,10 @@ router.post("/", authenticateUser, async (req, res) => {
   }
   try {
     console.log("Memulai transaksi untuk donationRequestId:", donationRequestId);
+    
+
     await prisma.$transaction(async (tx) => {
+    
       // Langkah 1: Cek dulu status permintaan donasi yang dituju
       const newFulfillment = await tx.donationFulfillment.create({
         data: {
@@ -174,13 +177,30 @@ router.get("/", async (req, res) => {
 router.get("/user", authenticateUser, async (req, res) => {
   const userId = req.user.id;
   try {
-    const donationFulfillments = await prisma.donationFulfillment.findMany({
-      where: {
-        OR:[
-        {donorFirebaseId: userId},
-                {donorRequestFirebaseId: userId},
 
-        ]
+       const donationFulfillments = await prisma.donationFulfillment.findMany({
+      where: {
+ OR: [
+          { donorFirebaseId: userId },
+          { donorRequestFirebaseId: userId },
+
+        ]      },
+      orderBy: {
+        createdAt: "desc",
+      },
+
+      // 🔥 IMPORTANT: include relation
+      include: {
+        donationRequest: {
+          select: {
+            id: true,
+            itemType: true,
+            alasanDonasi: true,
+            detailBarang: true,
+            status: true,
+            requestorName: true,
+          },
+        },
       },
     });
     console.log("ID dari token:", userId);

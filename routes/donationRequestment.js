@@ -9,7 +9,7 @@ const { Prisma } = require("@prisma/client");
  * @desc    Membuat permintaan donasi barang baru
  * @access  Private (Harus login)
  */
-router.post("/set-to-confirmed/:donationRequestId", authenticateUser, async (req, res) => {
+router.post("/set-to-requested/:id", authenticateUser, async (req, res) => {
   const donorFirebaseId = req.user.id;
   const { id } = req.params;
 
@@ -23,7 +23,7 @@ router.post("/set-to-confirmed/:donationRequestId", authenticateUser, async (req
     address,
     city,
   } = req.body;
-
+  console.log(id)
   if (!donationRequestId || !donorName || !requestorId || !reason) {
     return res.status(400).send({
       message: "Field wajib belum lengkap.",
@@ -31,10 +31,23 @@ router.post("/set-to-confirmed/:donationRequestId", authenticateUser, async (req
   }
 
   try {
+    const existingRequest = await prisma.donationRequest.findFirst({
+      where: {
+        id: id,
+        requestorFirebaseId: donorFirebaseId,
+      },
+    });
+    console.log("existing request ")
+    console.log(existingRequest)
+    if (existingRequest) {
+      return res.status(404).json({
+        message: "Data request donasi sudah ada",
+      });
+    }
     await prisma.donationRequest.update({
       where: { id },
       data: {
-        status: "CONFIRMED",
+        status: "REQUESTED",
       },
     });
     const result = await prisma.$transaction(async (tx) => {
@@ -62,10 +75,60 @@ router.post("/set-to-confirmed/:donationRequestId", authenticateUser, async (req
     });
 
   } catch (error) {
-    console.error("Gagal mengirim donasi:", error);
     res.status(500).send({ message: "Terjadi kesalahan pada server." });
   }
 });
+
+
+
+router.post("/set-to-confirmed/:donationRequestId/:requestmentId", authenticateUser, async (req, res) => {
+  const donorFirebaseId = req.user.id;
+  const { donationRequestId } = req.params;
+    const { requestmentId } = req.params;
+
+
+  console.log(donationRequestId)
+  console.log(requestmentId)
+
+  console.log(donorFirebaseId)
+  try {
+   
+
+    await prisma.$transaction(async (tx) => {
+      // 1. update donationRequestment
+      await tx.donationRequestment.updateMany({
+        where: {
+          id: requestmentId,
+        },
+        data: {
+          status: "CONFIRMED",
+        },
+      });
+
+      // 2. update donationRequest
+      await tx.donationRequest.update({
+        where: {
+          id: donationRequestId,
+        },
+        data: {
+          status: "CONFIRMED",
+        },
+      });
+    });
+
+
+
+    res.status(201).json({
+      message: "Donasi berhasil dikirim!",
+    });
+
+  } catch (error) {
+    res.status(500).send({ message: "Terjadi kesalahan pada server." });
+  }
+});
+
+
+
 
 
 module.exports = router;

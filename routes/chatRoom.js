@@ -11,100 +11,86 @@ const authenticateUser = require("../middleware/authMiddleware");
 router.post("/create", authenticateUser, async (req, res) => {
   try {
     const currentUserId = req.user.id;
-    const { donationRequestId } = req.body;
+    const { donationRequestId, fulfillmentId, requestmentId } = req.body;
 
     if (!donationRequestId) {
-      return res.status(400).json({
-        message: "donationRequestId is required"
-      });
+      return res.status(400).json({ message: "donationRequestId is required" });
     }
-
-    const donation = await prisma.donationRequest.findUnique({
-      where: { id: donationRequestId }
-    });
-
-    if (!donation) {
-      return res.status(404).json({
-        message: "Donation not found"
-      });
-    }
-
-    const fulfillment = await prisma.donationFulfillment.findFirst({
-      where: { donationRequestId }
-    });
 
     let otherUserId;
+    let customRoomId;
 
-    if (currentUserId === donation.requestorFirebaseId) {
-      otherUserId = fulfillment?.donorFirebaseId;
-    } else {
-      otherUserId = donation.requestorFirebaseId;
-    }
-
-    if (!otherUserId || currentUserId === otherUserId) {
-      return res.status(400).json({
-        message: "Invalid chat participants"
+    // Skenario A: Chat berdasarkan Fulfillment (Donatur merespons)
+    if (fulfillmentId) {
+      const fulfillment = await prisma.donationFulfillment.findUnique({
+        where: { id: fulfillmentId },
+        include: { donationRequest: true }
       });
+      
+      if (!fulfillment) return res.status(404).json({ message: "Fulfillment not found" });
+      
+      // Lawan bicara: Jika saya donatur, maka lawan saya adalah requestor (owner). Begitu sebaliknya.
+      otherUserId = (currentUserId === fulfillment.donorFirebaseId) 
+        ? fulfillment.donationRequest.requestorFirebaseId 
+        : fulfillment.donorFirebaseId;
+        
+      customRoomId = `fullfill_${fulfillmentId}`;
+    } 
+    
+    // Skenario B: Chat berdasarkan Requestment (Penerima meminta barang)
+    else if (requestmentId) {
+      const requestment = await prisma.donationRequestment.findUnique({
+        where: { id: requestmentId },
+        include: { donationRequest: true }
+      });
+
+      if (!requestment) return res.status(404).json({ message: "Requestment not found" });
+
+      otherUserId = (currentUserId === requestment.requestorId)
+        ? requestment.donationRequest.requestorFirebaseId
+        : requestment.requestorId;
+
+      customRoomId = `reqmt_${requestmentId}`;
+    } 
+    
+    else {
+      return res.status(400).json({ message: "fulfillmentId or requestmentId is required" });
     }
 
-    const customRoomId =
-      donationRequestId +
-      "_" +
-      [currentUserId, otherUserId].sort().join("_");
-
-    let room;
-
-    try {
-      room = await prisma.chatRoom.create({
-        data: {
-          roomId: customRoomId,
-          donationRequestId,
-          members: {
-            create: [
-              { userId: currentUserId },
-              { userId: otherUserId }
-            ]
-          }
-        },
-        include: {
-          members: { include: { user: true } }
+    // Buat atau Ambil Room
+    const room = await prisma.chatRoom.upsert({
+      where: { roomId: customRoomId },
+      update: {},
+      create: {
+        roomId: customRoomId,
+        donationRequestId,
+        fulfillmentId: fulfillmentId || null,
+        requestmentId: requestmentId || null,
+        members: {
+          create: [
+            { userId: currentUserId },
+            { userId: otherUserId }
+          ]
         }
-      });
-
-    } catch (error) {
-      if (error.code === "P2002") {
-        console.log("ROOM SUDAH ADA → AMBIL EXISTING");
-
-        room = await prisma.chatRoom.findFirst({
-          where: { donationRequestId },
-          include: {
-            members: { include: { user: true } }
-          }
-        });
-
-      } else {
-        throw error;
+      },
+      include: {
+        members: { include: { user: true } }
       }
-    }
+    });
 
     return res.status(200).json({
-      message: "Chat room ready",
       data: {
         id: room.id,
         roomId: room.roomId,
-        donationRequestId: room.donationRequestId,
         participants: room.members.map(m => m.user)
       }
     });
 
   } catch (error) {
-    console.error("CREATE ROOM ERROR:", error);
-    return res.status(500).json({
-      message: "Failed to create room"
-    });
+    console.error(error);
+    return res.status(500).json({ message: "Error creating chat room" });
   }
 });
-
 router.get("/rooms", authenticateUser, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -114,72 +100,151 @@ router.get("/rooms", authenticateUser, async (req, res) => {
         isActive: true,
         members: {
           some: {
-            userId: userId
-          }
-        }
+            userId: userId,
+          },
+        },
       },
+
       include: {
-        // 🔥 ambil data donation request
         donation: {
           select: {
             id: true,
             description: true,
             itemType: true,
             status: true,
-            city: true
-          }
+            city: true,
+          },
         },
 
-        // 🔥 ambil member + user (SAFE)
+        // =========================
+        // 🔥 REQUESTMENT (FIXED)
+        // =========================
+        requestment: {
+          select: {
+            id: true,
+            donorName: true,
+            reason: true, // ✅ FIX: bukan donorNotes
+            latitude: true,
+            longitude: true,
+            address: true,
+            city: true,
+            donationRequestId: true,
+            requestorId: true,
+          },
+        },
+
+        // =========================
+        // 🔥 FULFILLMENT (VALID)
+        // =========================
+        fulfillment: {
+          select: {
+            id: true,
+            donorName: true,
+            donorNotes: true,
+            latitude: true,
+            longitude: true,
+            address: true,
+            city: true,
+            donationRequestId: true,
+            donorFirebaseId: true,
+          },
+        },
+
         members: {
           include: {
             user: {
               select: {
                 id: true,
-                name: true
-              }
-            }
-          }
-        }
+                name: true,
+              },
+            },
+          },
+        },
       },
+
       orderBy: {
-        updatedAt: "desc"
-      }
+        updatedAt: "desc",
+      },
     });
 
-    const result = rooms.map(room => {
-      const otherUser = room.members.find(m => m.userId !== userId);
+    const result = rooms.map((room) => {
+      const otherUser = room.members.find(
+        (m) => m.userId !== userId
+      );
 
       return {
         id: room.id,
         roomId: room.roomId,
         donationRequestId: room.donationRequestId,
 
-        // 🔥 relasi ke DonationRequest
-        donationRequest: room.donation,
+        // =========================
+        // 🔥 REQUESTMENT FLOW
+        // =========================
+        requestment: room.requestment
+          ? {
+              id: room.requestment.id,
+              donorName: room.requestment.donorName,
+              reason: room.requestment.reason,
+              latitude: room.requestment.latitude,
+              longitude: room.requestment.longitude,
+              address: room.requestment.address,
+              city: room.requestment.city,
+              donationRequestId:
+                room.requestment.donationRequestId,
+              requestorId: room.requestment.requestorId,
+            }
+          : null,
 
+        // =========================
+        // 🔥 FULFILLMENT FLOW
+        // =========================
+        fulfillment: room.fulfillment
+          ? {
+              id: room.fulfillment.id,
+              donorName: room.fulfillment.donorName,
+              donorNotes: room.fulfillment.donorNotes,
+              latitude: room.fulfillment.latitude,
+              longitude: room.fulfillment.longitude,
+              address: room.fulfillment.address,
+              city: room.fulfillment.city,
+              donationRequestId:
+                room.fulfillment.donationRequestId,
+              donorFirebaseId:
+                room.fulfillment.donorFirebaseId,
+            }
+          : null,
+
+        // =========================
+        // 🔥 META CHAT
+        // =========================
         lastMessage: room.lastMessage,
         updatedAt: room.updatedAt,
 
-        // 🔥 user lawan chat
-        otherUser: otherUser?.user ?? null
+        otherUser: otherUser?.user ?? null,
+
+        // =========================
+        // 🔥 AUTO DETECT TYPE
+        // =========================
+        chatType: room.fulfillment
+          ? "FULFILLMENT"
+          : room.requestment
+          ? "REQUEST"
+          : "UNKNOWN",
       };
     });
 
     return res.status(200).json({
-      message: "Rooms fetched",
-      data: result
+      message: "Rooms fetched successfully",
+      data: result,
     });
-
   } catch (error) {
     console.error("GET ROOMS ERROR:", error);
 
     return res.status(500).json({
-      message: "Failed to fetch rooms"
+      message: "Failed to fetch rooms",
     });
   }
 });
-
 // =====================================
 // 3. GET MESSAGES (🔥 SUPPORT 2 ID)
 // =====================================
@@ -219,15 +284,15 @@ router.get("/:roomId/messages", authenticateUser, async (req, res) => {
 
 
     console.log({
-        messages: room.chats.map(chat => ({
-          id: chat.id,
-          roomId: room.roomId,
-          message: chat.message,
-          senderId: chat.senderId,
-          sender: chat.sender,
-          createdAt: chat.createdAt
-        }))
-      });
+      messages: room.chats.map(chat => ({
+        id: chat.id,
+        roomId: room.roomId,
+        message: chat.message,
+        senderId: chat.senderId,
+        sender: chat.sender,
+        createdAt: chat.createdAt
+      }))
+    });
     return res.status(200).json({
       message: "Messages fetched",
       data: {
