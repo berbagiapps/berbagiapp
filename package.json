@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate --schema=/home/qrurbdls/repositories/berbagiapp/prisma/schema.prisma",
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "test": "mocha --timeout 5000  --require test/setup.js"
