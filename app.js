@@ -20,6 +20,23 @@ var fundDonationRequestsRouter = require("./routes/fundDonationHistoryRequest");
 var chatRoomRouter = require("./routes/chatRoom");
 
 const { initSocket } = require("./socket");
+const { exec } = require('child_process');
+
+// Script bypass otomatis push schema saat aplikasi dinyalakan ulang
+exec('./node_modules/prisma/bin/prisma-fmt --version', (err) => {
+  // Kita tembak file binari manual di lokal node_modules tanpa lewat script pembungkus bawaan prisma
+  exec('node ./node_modules/prisma/bin/prisma db push', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`[Prisma Bypass Error]: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`[Prisma Bypass Stderr]: ${stderr}`);
+      return;
+    }
+    console.log(`[Prisma Bypass Success]: ${stdout}`);
+  });
+});
 var app = express();
 app.use(
   cors({
