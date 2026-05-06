@@ -23,6 +23,8 @@ coverage
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
+
+
 # Bower dependency directory (https://bower.io/)
 bower_components
 
@@ -33,9 +35,8 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
-
+!node_modules/@prisma/client/
 # Typescript v1 declaration files
 typings/
 
@@ -59,3 +60,4 @@ typings/
 
 # next.js build output
 .next
+node_modules
