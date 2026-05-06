@@ -1,5 +1,5 @@
-import multer from "multer";
-import fs from "fs";
+const multer = require("multer");
+const fs = require("fs");
 
 // pastikan folder ada
 const uploadDir = "uploads/donations";
@@ -17,9 +17,11 @@ const storage = multer.diskStorage({
   },
 });
 
-export const upload = multer({
+const upload = multer({
   storage,
   limits: {
     fileSize: 5 * 1024 * 1024, // max 5MB
   },
 });
+
+module.exports = { upload };
