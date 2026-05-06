@@ -9,20 +9,7 @@ require("dotenv").config({ path: ".env.local" });
 
 // ==================== PRISMA GENERATE BYPASS BLOCK ====================
 // Menunjuk langsung ke binary dan skema menggunakan path absolut agar tidak tersesat di cPanel
-const prismaBin = path.join(__dirname, 'node_modules', 'prisma', 'bin', 'prisma');
-const schemaPath = path.join(__dirname, 'prisma', 'schema.prisma');
 
-exec(`node ${prismaBin} generate --schema=${schemaPath}`, (error, stdout, stderr) => {
-  if (error) {
-    console.error(`[Prisma Generate Error]: ${error.message}`);
-    return;
-  }
-  if (stderr) {
-    console.error(`[Prisma Generate Stderr]: ${stderr}`);
-    return;
-  }
-  console.log(`[Prisma Generate Success]: ${stdout}`);
-});
 // ======================================================================
 
 var indexRouter = require("./routes/index");
