@@ -31,14 +31,17 @@ router.post("/set-to-requested/:id", authenticateUser, async (req, res) => {
   }
 
   try {
-    const existingRequest = await prisma.donationRequest.findFirst({
+     const existingRequest = await prisma.donationRequestment.findFirst({
       where: {
-        id: id,
-        requestorFirebaseId: donorFirebaseId,
+        donationRequestId: id,
+        requestorId:donorFirebaseId
+        // requestorFirebaseId: donorFirebaseId,
       },
     });
     console.log("existing request ")
     console.log(existingRequest)
+    console.log(id);
+
     if (existingRequest) {
       return res.status(404).json({
         message: "Data request donasi sudah ada",
