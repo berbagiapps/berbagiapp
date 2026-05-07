@@ -240,8 +240,8 @@ router.get("/rooms", authenticateUser, async (req, res) => {
   } catch (error) {
     console.error("GET ROOMS ERROR:", error);
 
-    return res.status(500).json({
-      message: "Failed to fetch rooms",
+    return res.status(400).json({
+      message: "Failed to fetch rooms "+error,
     });
   }
 });

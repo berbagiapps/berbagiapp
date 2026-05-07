@@ -18,7 +18,11 @@ var authRouter = require("./routes/auth");
 
 // var campaignsRouter = require("./routes/campaigns");
 var donationRequestsRouter = require("./routes/donationRequests");
+var personalInfoRouter = require("./routes/personalInfo");
+
 var donationRequestsmentRouter = require("./routes/donationRequestment");
+var notificationRouter = require("./routes/notification");
+
 
 // --- 1. TAMBAHKAN BARIS INI UNTUK MENGIMPOR ROUTER BARU ---
 var donationFulfillmentsRouter = require("./routes/donationFulfillments");
@@ -52,7 +56,8 @@ app.use("/donation-requests", donationRequestsRouter);
 // --- 2. TAMBAHKAN BARIS INI UNTUK MENGGUNAKAN ROUTER BARU ---
 app.use("/fulfillments", donationFulfillmentsRouter);
 app.use("/donation-requestment", donationRequestsmentRouter);
-
+app.use("/notification", notificationRouter);
+app.use("/personal_info", personalInfoRouter);
 app.use("/funddonation-requests", fundDonationRequestsRouter); // Rute baru
 
 // Serve static files from Vue build

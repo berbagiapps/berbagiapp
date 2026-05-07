@@ -31,10 +31,10 @@ router.post("/set-to-requested/:id", authenticateUser, async (req, res) => {
   }
 
   try {
-     const existingRequest = await prisma.donationRequestment.findFirst({
+    const existingRequest = await prisma.donationRequestment.findFirst({
       where: {
         donationRequestId: id,
-        requestorId:donorFirebaseId
+        requestorId: donorFirebaseId
         // requestorFirebaseId: donorFirebaseId,
       },
     });
@@ -44,7 +44,7 @@ router.post("/set-to-requested/:id", authenticateUser, async (req, res) => {
 
     if (existingRequest) {
       return res.status(404).json({
-        message: "Data request donasi sudah ada",
+        message: "Data request donasi sudah ada pilih donasi lain",
       });
     }
     await prisma.donationRequest.update({
@@ -87,7 +87,7 @@ router.post("/set-to-requested/:id", authenticateUser, async (req, res) => {
 router.post("/set-to-confirmed/:donationRequestId/:requestmentId", authenticateUser, async (req, res) => {
   const donorFirebaseId = req.user.id;
   const { donationRequestId } = req.params;
-    const { requestmentId } = req.params;
+  const { requestmentId } = req.params;
 
 
   console.log(donationRequestId)
@@ -95,7 +95,7 @@ router.post("/set-to-confirmed/:donationRequestId/:requestmentId", authenticateU
 
   console.log(donorFirebaseId)
   try {
-   
+
 
     await prisma.$transaction(async (tx) => {
       // 1. update donationRequestment

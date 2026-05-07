@@ -46,6 +46,7 @@ router.post(
       });
     }
 
+
     try {
       const newDonationRequest = await prisma.donationRequest.create({
         data: {
@@ -75,11 +76,20 @@ router.post(
         },
       });
       console.log(req.body);
+      await prisma.user.update({
+        where: {
+          id: requestorFirebaseId, // ambil dari auth middleware kamu
+        },
+        data: {
+          isDonate: true,
+        },
+      });
 
       res.status(201).json({
         message: "Permintaan donasi berhasil dibuat!",
         data: newDonationRequest,
-      });
+      })
+        ;
     } catch (error) {
       console.log(error);
       console.error("ERROR:", error);
@@ -148,74 +158,84 @@ router.post(
  * @desc    Mengembalikan semua permintaan donasi barang
  * @access  Public 
  */
-router.get("/", async (req, res) => {
+
+router.get("/", authenticateUser, async (req, res) => {
   const search = req.query.search || "";
   const category = req.query.category || "";
 
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-
   const offset = (page - 1) * limit;
 
   try {
-    const whereCondition = {
-      AND: [
-        // 🔥 STATUS FIX (OPEN OR REQUESTED)
-        {
-          OR: [
-            { status: "OPEN" },
-            { status: "REQUESTED" },
-          ],
-        },
-        category?{
-          donationType:category
-        }:{},
+    const andConditions = [];
 
-        // 🔍 SEARCH OPTIONAL
-        search
-          ? {
-            OR: [
-              {
-                requestorName: {
-                  contains: search,
-                  mode: "insensitive",
-                },
-              },
-              {
-                locationDescription: {
-                  contains: search,
-                  mode: "insensitive",
-                },
-              },
-              {
-                status:{
-                   contains: search,
-                  mode: "insensitive",
-
-                }
-              },
-              {
-                itemType: {
-                  contains: search,
-                  mode: "insensitive",
-                },
-              },
-              {
-                description: {
-                  contains: search,
-                  mode: "insensitive",
-                },
-              },
-            ],
-          }
-          : {},
+    /// =========================
+    /// STATUS FIXED (NO SEARCH HERE)
+    /// =========================
+    andConditions.push({
+      OR: [
+        { status: "OPEN" },
+        { status: "REQUESTED" },
       ],
+    });
+
+    /// =========================
+    /// CATEGORY FILTER (OPTIONAL)
+    /// =========================
+    if (category) {
+      andConditions.push({
+        donationType: category,
+      });
+    }
+
+    /// =========================
+    /// SEARCH FILTER (STRING ONLY)
+    /// =========================
+    if (search) {
+      andConditions.push({
+        OR: [
+          {
+            requestorName: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            locationDescription: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            itemType: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            description: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ],
+      });
+    }
+
+    const whereCondition = {
+      AND: andConditions,
     };
 
+    /// =========================
+    /// QUERY + COUNT (TRANSACTION)
+    /// =========================
     const [data, total] = await prisma.$transaction([
       prisma.donationRequest.findMany({
         where: whereCondition,
-        orderBy: { createdAt: "desc" },
+        orderBy: {
+          createdAt: "desc",
+        },
         skip: offset,
         take: limit,
       }),
@@ -225,6 +245,9 @@ router.get("/", async (req, res) => {
       }),
     ]);
 
+    /// =========================
+    /// RESPONSE
+    /// =========================
     return res.json({
       message: "Success",
       data,
@@ -235,13 +258,17 @@ router.get("/", async (req, res) => {
         totalPages: Math.ceil(total / limit),
       },
     });
+
   } catch (error) {
+    console.error("Search error:", error);
+
     return res.status(500).json({
       message: "Server error",
     });
   }
 });
-router.get("/get/:id", async (req, res) => {
+
+router.get("/get/:id",authenticateUser, async (req, res) => {
   const { id } = req.params;
 
   try {

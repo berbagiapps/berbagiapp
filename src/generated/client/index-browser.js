@@ -130,6 +130,7 @@ exports.Prisma.TermsConditionScalarFieldEnum = {
 exports.Prisma.NotificationScalarFieldEnum = {
   id: 'id',
   notification: 'notification',
+  uuid: 'uuid',
   userid: 'userid',
   notifType: 'notifType',
   createdAt: 'createdAt',
