@@ -86,6 +86,8 @@ model DonationRequest {
   fulfillments         DonationFulfillment[]
   chatRooms            ChatRoom[]
   donationRequestments DonationRequestment[]
+
+  @@unique([detailBarang, itemType, alasanDonasi, requestorFirebaseId])
 }
 
 model PhotoDonation {
@@ -119,6 +121,8 @@ model DonationFulfillment {
   donationRequestId      String
   donationRequest        DonationRequest @relation(fields: [donationRequestId], references: [id])
   chatRoom               ChatRoom?
+
+  @@unique([donationRequestId, donorNotes, donorFirebaseId,donorName])
 }
 
 model DonationRequestment {
@@ -137,6 +141,8 @@ model DonationRequestment {
   donationRequestId String
   donationRequest   DonationRequest @relation(fields: [donationRequestId], references: [id])
   chatRoom          ChatRoom?
+
+  @@unique([donationRequestId, requestorId, reason,donorName])
 }
 
 model Token {

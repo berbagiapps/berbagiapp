@@ -17360,6 +17360,7 @@ export namespace Prisma {
 
   export type DonationRequestWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    detailBarang_itemType_alasanDonasi_requestorFirebaseId?: DonationRequestDetailBarangItemTypeAlasanDonasiRequestorFirebaseIdCompoundUniqueInput
     AND?: DonationRequestWhereInput | DonationRequestWhereInput[]
     OR?: DonationRequestWhereInput[]
     NOT?: DonationRequestWhereInput | DonationRequestWhereInput[]
@@ -17384,7 +17385,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentListRelationFilter
     chatRooms?: ChatRoomListRelationFilter
     donationRequestments?: DonationRequestmentListRelationFilter
-  }, "id">
+  }, "id" | "detailBarang_itemType_alasanDonasi_requestorFirebaseId">
 
   export type DonationRequestOrderByWithAggregationInput = {
     id?: SortOrder
@@ -17532,6 +17533,7 @@ export namespace Prisma {
 
   export type DonationFulfillmentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    donationRequestId_donorNotes_donorFirebaseId_donorName?: DonationFulfillmentDonationRequestIdDonorNotesDonorFirebaseIdDonorNameCompoundUniqueInput
     AND?: DonationFulfillmentWhereInput | DonationFulfillmentWhereInput[]
     OR?: DonationFulfillmentWhereInput[]
     NOT?: DonationFulfillmentWhereInput | DonationFulfillmentWhereInput[]
@@ -17549,7 +17551,7 @@ export namespace Prisma {
     donationRequestId?: StringFilter<"DonationFulfillment"> | string
     donationRequest?: XOR<DonationRequestScalarRelationFilter, DonationRequestWhereInput>
     chatRoom?: XOR<ChatRoomNullableScalarRelationFilter, ChatRoomWhereInput> | null
-  }, "id">
+  }, "id" | "donationRequestId_donorNotes_donorFirebaseId_donorName">
 
   export type DonationFulfillmentOrderByWithAggregationInput = {
     id?: SortOrder
@@ -17632,6 +17634,7 @@ export namespace Prisma {
 
   export type DonationRequestmentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    donationRequestId_requestorId_reason_donorName?: DonationRequestmentDonationRequestIdRequestorIdReasonDonorNameCompoundUniqueInput
     AND?: DonationRequestmentWhereInput | DonationRequestmentWhereInput[]
     OR?: DonationRequestmentWhereInput[]
     NOT?: DonationRequestmentWhereInput | DonationRequestmentWhereInput[]
@@ -17649,7 +17652,7 @@ export namespace Prisma {
     donationRequestId?: StringFilter<"DonationRequestment"> | string
     donationRequest?: XOR<DonationRequestScalarRelationFilter, DonationRequestWhereInput>
     chatRoom?: XOR<ChatRoomNullableScalarRelationFilter, ChatRoomWhereInput> | null
-  }, "id">
+  }, "id" | "donationRequestId_requestorId_reason_donorName">
 
   export type DonationRequestmentOrderByWithAggregationInput = {
     id?: SortOrder
@@ -19486,6 +19489,13 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type DonationRequestDetailBarangItemTypeAlasanDonasiRequestorFirebaseIdCompoundUniqueInput = {
+    detailBarang: string
+    itemType: string
+    alasanDonasi: string
+    requestorFirebaseId: string
+  }
+
   export type DonationRequestCountOrderByAggregateInput = {
     id?: SortOrder
     requestorFirebaseId?: SortOrder
@@ -19635,6 +19645,13 @@ export namespace Prisma {
     isNot?: ChatRoomWhereInput | null
   }
 
+  export type DonationFulfillmentDonationRequestIdDonorNotesDonorFirebaseIdDonorNameCompoundUniqueInput = {
+    donationRequestId: string
+    donorNotes: string
+    donorFirebaseId: string
+    donorName: string
+  }
+
   export type DonationFulfillmentCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -19691,6 +19708,13 @@ export namespace Prisma {
   export type DonationFulfillmentSumOrderByAggregateInput = {
     latitude?: SortOrder
     longitude?: SortOrder
+  }
+
+  export type DonationRequestmentDonationRequestIdRequestorIdReasonDonorNameCompoundUniqueInput = {
+    donationRequestId: string
+    requestorId: string
+    reason: string
+    donorName: string
   }
 
   export type DonationRequestmentCountOrderByAggregateInput = {

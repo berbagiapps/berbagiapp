@@ -86,66 +86,56 @@ router.put("/profile", authenticateUser, async (req, res) => {
       message: "Failed to update profile",
     });
   }
-});
-router.post("/login", async function (req, res, next) {
+});router.post("/login", async function (req, res, next) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(401).send({ message: "Email and password are required" });
+    return res.status(401).send({ message: "Email dan kata sandi wajib diisi" });
   }
 
+  // Normalisasi: Ubah email menjadi huruf kecil semua
+  const normalizedEmail = email.toLowerCase().trim();
 
   try {
     const user = await prisma.user.findUnique({
       where: {
-        email: email
+        email: normalizedEmail // Gunakan email yang sudah di-lowercase
       }
     });
 
     if (!user) {
-      return res.status(401).send({ message: "Email not found" });
+      return res.status(401).send({ message: "Email tidak ditemukan" });
     }
 
-    const userDoc = user;
-    const userId = user.id;
-    const varToken = {
-      id: userId,
-      name: userDoc.name,
-      email: userDoc.email,
-    }
-    console.log("User found:", userDoc, userId);
-
-    const isPasswordValid = await bcrypt.compare(password, userDoc.password);
+    // ... sisa logic bcrypt dan isActive tetap sama ...
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).send({ message: "Invalid password" });
+      return res.status(401).send({ message: "Kata sandi salah" });
     }
 
-    // Check if user is active
-    if (!userDoc.isActive) {
-      sendActivationEmail(email);
-
+    if (!user.isActive) {
+      sendActivationEmail(normalizedEmail);
       return res.status(401).send({
-        message: "Account is not active. Please check your email for activation.",
+        message: "Akun belum aktif. Silakan cek email Anda untuk aktivasi.",
       });
     }
 
-    const { password: hidepassword, ...userWithoutPassword } = userDoc;
-    //create a token here
-    const token = generateToken(varToken);
+    const { password: hidepassword, ...userWithoutPassword } = user;
+    const token = generateToken({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
 
-    console.log
     res.status(200).send({
-      message: "Login success",
-      data: { token, user: { id: userId, ...userWithoutPassword } },
+      message: "Login berhasil",
+      data: { token, user: userWithoutPassword },
     });
   } catch (e) {
     console.log(e);
-
-
+    res.status(500).send({ message: "Terjadi kesalahan pada server" });
   }
-}
-
-);
+});
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password, identificationNumber } = req.body;
