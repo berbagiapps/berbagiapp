@@ -3,7 +3,7 @@
 var express = require("express");
 var router = express.Router();
 // Mundur satu tingkat keluar dari folder 'routes', lalu masuk ke 'src/generated/client'
-const { PrismaClient } = require('../src/generated/client');const prisma = new PrismaClient();
+const { PrismaClient } = require('../src/generated/client'); const prisma = new PrismaClient();
 const authenticateUser = require("../middleware/authMiddleware");
 const requireQueryParams = require("../middleware/requireQueryParams.ts");
 
@@ -36,10 +36,10 @@ router.post("/", authenticateUser, async (req, res) => {
   }
   try {
     console.log("Memulai transaksi untuk donationRequestId:", donationRequestId);
-    
+
 
     await prisma.$transaction(async (tx) => {
-    
+
       // Langkah 1: Cek dulu status permintaan donasi yang dituju
       const newFulfillment = await tx.donationFulfillment.create({
         data: {
@@ -146,7 +146,7 @@ router.post("/set-to-fulfilled", authenticateUser, async (req, res) => {
  * @desc    Mengembalikan donasi
  * @access  Public 
  */
-router.get("/", async (req, res) => {
+router.get("/helping", async (req, res) => {
   try {
     const donorFirebaseId = req.user.id;
 
@@ -169,6 +169,31 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const donorFirebaseId = req.user.id;
+
+    const donationFulfillments = await prisma.donationFulfillment.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        donationRequest: {
+          requestorFirebaseId: donorFirebaseId,
+        }, // dummy id for testing
+      },
+    });
+
+    res.status(200).json({
+      message: "",
+      data: donationFulfillments,
+    });
+  } catch (error) {
+    console.error("Gagal Get /donation-fulfillments:", error);
+    res.status(500).send({ message: "Terjadi kesalahan pada server." + error.message });
+  }
+});
+
 /**
  * @route   Get /donation-fulfillments/user
  * @desc    Mengembalikan semua donasi barang berdasarkan user
@@ -178,13 +203,14 @@ router.get("/user", authenticateUser, async (req, res) => {
   const userId = req.user.id;
   try {
 
-       const donationFulfillments = await prisma.donationFulfillment.findMany({
+    const donationFulfillments = await prisma.donationFulfillment.findMany({
       where: {
- OR: [
+        OR: [
           { donorFirebaseId: userId },
           { donorRequestFirebaseId: userId },
 
-        ]      },
+        ]
+      },
       orderBy: {
         createdAt: "desc",
       },
