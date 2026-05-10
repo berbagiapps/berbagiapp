@@ -48,7 +48,7 @@ router.post(
           requestorFirebaseId,
           requestorName,
           expiredAt: expiredAt ? new Date(`${expiredAt}T00:00:00Z`) : null,
-   
+
           alasanDonasi,
           detailBarang,
           locationDescription,
@@ -88,13 +88,16 @@ router.post(
           isDonate: true,
         },
       });
-if (user?.token) {
-  await sendPushNotification({
-    token: user.token,
-    title: "Donasi berhasil dibuat",
-    body: "Permintaan donasi kamu berhasil diposting",
-  });
-}      res.status(201).json({
+      console.log
+      if (user?.tokenFcm) {
+        console.log("token ada ga")
+        console.log(user.tokenFcm)
+        await sendPushNotification({
+          token: user.tokenFcm,
+          title: "Donasi berhasil dibuat",
+          body: "Permintaan donasi kamu berhasil diposting",
+        });
+      } res.status(201).json({
         message: "Permintaan donasi berhasil dibuat!",
         data: newDonationRequest,
       })

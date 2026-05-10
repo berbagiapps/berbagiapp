@@ -9,6 +9,7 @@ async function sendPushNotification({
   body,
   data = {},
 }) {
+  console.log("kepanggil ga")
   try {
     const message = {
       token: token,
@@ -22,7 +23,6 @@ async function sendPushNotification({
     };
 
     const response = await admin.messaging().send(message);
-
     console.log("✅ Notification sent:", response);
     return response;
   } catch (error) {
