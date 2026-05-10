@@ -162,7 +162,7 @@ model User {
   isActive             Boolean @default(false)
   isDonate             Boolean @default(false)
   isPhotoId            Boolean @default(false)
-  token                String?
+  tokenFcm             String?
   identificationNumber String?
   photoKtp             String?
   // Nama relasi di sini harus sama dengan yang ada di model Chat
