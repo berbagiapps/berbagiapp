@@ -1,4 +1,6 @@
 const admin = require("firebase-admin");
+const adminFirebase = require("./admin");
+
 
 /**
  * Kirim push notification ke 1 device

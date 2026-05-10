@@ -89,6 +89,8 @@ router.post(
         },
       });
       console.log("token ada ga")
+      console.log(user)
+      console.log(user.tokenFcm)
       if (user?.tokenFcm) {
         console.log("token ada ga")
         console.log(user.tokenFcm)
@@ -191,7 +193,11 @@ router.get("/", authenticateUser, async (req, res) => {
         },
         skip: offset,
         take: limit,
+         include: {
+      photoDonations: true, // 👈 ini yang penting
+    },
       }),
+      
 
       prisma.donationRequest.count({
         where: whereCondition,

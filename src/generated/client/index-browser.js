@@ -227,7 +227,7 @@ exports.Prisma.UserScalarFieldEnum = {
   isActive: 'isActive',
   isDonate: 'isDonate',
   isPhotoId: 'isPhotoId',
-  token: 'token',
+  tokenFcm: 'tokenFcm',
   identificationNumber: 'identificationNumber',
   photoKtp: 'photoKtp',
   createdAt: 'createdAt',
