@@ -88,7 +88,7 @@ router.post(
           isDonate: true,
         },
       });
-      console.log
+      console.log("token ada ga")
       if (user?.tokenFcm) {
         console.log("token ada ga")
         console.log(user.tokenFcm)
