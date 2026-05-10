@@ -50,7 +50,7 @@ router.post("/updateToken", authenticateUser, async (req, res) => {
         id: userId,
       },
       data: {
-        token: token,
+        token: tokenFcm,
       },
     });
 
