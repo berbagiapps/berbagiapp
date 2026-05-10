@@ -11130,6 +11130,7 @@ export namespace Prisma {
     isActive: boolean | null
     isDonate: boolean | null
     isPhotoId: boolean | null
+    token: string | null
     identificationNumber: string | null
     photoKtp: string | null
     createdAt: Date | null
@@ -11145,6 +11146,7 @@ export namespace Prisma {
     isActive: boolean | null
     isDonate: boolean | null
     isPhotoId: boolean | null
+    token: string | null
     identificationNumber: string | null
     photoKtp: string | null
     createdAt: Date | null
@@ -11160,6 +11162,7 @@ export namespace Prisma {
     isActive: number
     isDonate: number
     isPhotoId: number
+    token: number
     identificationNumber: number
     photoKtp: number
     createdAt: number
@@ -11177,6 +11180,7 @@ export namespace Prisma {
     isActive?: true
     isDonate?: true
     isPhotoId?: true
+    token?: true
     identificationNumber?: true
     photoKtp?: true
     createdAt?: true
@@ -11192,6 +11196,7 @@ export namespace Prisma {
     isActive?: true
     isDonate?: true
     isPhotoId?: true
+    token?: true
     identificationNumber?: true
     photoKtp?: true
     createdAt?: true
@@ -11207,6 +11212,7 @@ export namespace Prisma {
     isActive?: true
     isDonate?: true
     isPhotoId?: true
+    token?: true
     identificationNumber?: true
     photoKtp?: true
     createdAt?: true
@@ -11295,6 +11301,7 @@ export namespace Prisma {
     isActive: boolean
     isDonate: boolean
     isPhotoId: boolean
+    token: string | null
     identificationNumber: string | null
     photoKtp: string | null
     createdAt: Date
@@ -11327,6 +11334,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: boolean
     identificationNumber?: boolean
     photoKtp?: boolean
     createdAt?: boolean
@@ -11346,6 +11354,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: boolean
     identificationNumber?: boolean
     photoKtp?: boolean
     createdAt?: boolean
@@ -11361,6 +11370,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: boolean
     identificationNumber?: boolean
     photoKtp?: boolean
     createdAt?: boolean
@@ -11376,13 +11386,14 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: boolean
     identificationNumber?: boolean
     photoKtp?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "role" | "password" | "isActive" | "isDonate" | "isPhotoId" | "identificationNumber" | "photoKtp" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "role" | "password" | "isActive" | "isDonate" | "isPhotoId" | "token" | "identificationNumber" | "photoKtp" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sentMessages?: boolean | User$sentMessagesArgs<ExtArgs>
     readMessages?: boolean | User$readMessagesArgs<ExtArgs>
@@ -11408,6 +11419,7 @@ export namespace Prisma {
       isActive: boolean
       isDonate: boolean
       isPhotoId: boolean
+      token: string | null
       identificationNumber: string | null
       photoKtp: string | null
       createdAt: Date
@@ -11846,6 +11858,7 @@ export namespace Prisma {
     readonly isActive: FieldRef<"User", 'Boolean'>
     readonly isDonate: FieldRef<"User", 'Boolean'>
     readonly isPhotoId: FieldRef<"User", 'Boolean'>
+    readonly token: FieldRef<"User", 'String'>
     readonly identificationNumber: FieldRef<"User", 'String'>
     readonly photoKtp: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
@@ -16945,6 +16958,7 @@ export namespace Prisma {
     isActive: 'isActive',
     isDonate: 'isDonate',
     isPhotoId: 'isPhotoId',
+    token: 'token',
     identificationNumber: 'identificationNumber',
     photoKtp: 'photoKtp',
     createdAt: 'createdAt',
@@ -17758,6 +17772,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"User"> | boolean
     isDonate?: BoolFilter<"User"> | boolean
     isPhotoId?: BoolFilter<"User"> | boolean
+    token?: StringNullableFilter<"User"> | string | null
     identificationNumber?: StringNullableFilter<"User"> | string | null
     photoKtp?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -17776,6 +17791,7 @@ export namespace Prisma {
     isActive?: SortOrder
     isDonate?: SortOrder
     isPhotoId?: SortOrder
+    token?: SortOrderInput | SortOrder
     identificationNumber?: SortOrderInput | SortOrder
     photoKtp?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -17797,6 +17813,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"User"> | boolean
     isDonate?: BoolFilter<"User"> | boolean
     isPhotoId?: BoolFilter<"User"> | boolean
+    token?: StringNullableFilter<"User"> | string | null
     identificationNumber?: StringNullableFilter<"User"> | string | null
     photoKtp?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -17815,6 +17832,7 @@ export namespace Prisma {
     isActive?: SortOrder
     isDonate?: SortOrder
     isPhotoId?: SortOrder
+    token?: SortOrderInput | SortOrder
     identificationNumber?: SortOrderInput | SortOrder
     photoKtp?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -17836,6 +17854,7 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
     isDonate?: BoolWithAggregatesFilter<"User"> | boolean
     isPhotoId?: BoolWithAggregatesFilter<"User"> | boolean
+    token?: StringNullableWithAggregatesFilter<"User"> | string | null
     identificationNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
     photoKtp?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -18824,6 +18843,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -18842,6 +18862,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -18860,6 +18881,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18878,6 +18900,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18896,6 +18919,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -18911,6 +18935,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18926,6 +18951,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19833,6 +19859,7 @@ export namespace Prisma {
     isActive?: SortOrder
     isDonate?: SortOrder
     isPhotoId?: SortOrder
+    token?: SortOrder
     identificationNumber?: SortOrder
     photoKtp?: SortOrder
     createdAt?: SortOrder
@@ -19848,6 +19875,7 @@ export namespace Prisma {
     isActive?: SortOrder
     isDonate?: SortOrder
     isPhotoId?: SortOrder
+    token?: SortOrder
     identificationNumber?: SortOrder
     photoKtp?: SortOrder
     createdAt?: SortOrder
@@ -19863,6 +19891,7 @@ export namespace Prisma {
     isActive?: SortOrder
     isDonate?: SortOrder
     isPhotoId?: SortOrder
+    token?: SortOrder
     identificationNumber?: SortOrder
     photoKtp?: SortOrder
     createdAt?: SortOrder
@@ -22300,6 +22329,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -22317,6 +22347,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -22385,6 +22416,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22402,6 +22434,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22495,6 +22528,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -22512,6 +22546,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -22534,6 +22569,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -22551,6 +22587,7 @@ export namespace Prisma {
     isActive?: boolean
     isDonate?: boolean
     isPhotoId?: boolean
+    token?: string | null
     identificationNumber?: string | null
     photoKtp?: string | null
     createdAt?: Date | string
@@ -22625,6 +22662,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22642,6 +22680,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22678,6 +22717,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"User"> | boolean
     isDonate?: BoolFilter<"User"> | boolean
     isPhotoId?: BoolFilter<"User"> | boolean
+    token?: StringNullableFilter<"User"> | string | null
     identificationNumber?: StringNullableFilter<"User"> | string | null
     photoKtp?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -23036,6 +23076,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23053,6 +23094,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23070,6 +23112,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDonate?: BoolFieldUpdateOperationsInput | boolean
     isPhotoId?: BoolFieldUpdateOperationsInput | boolean
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     identificationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     photoKtp?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
