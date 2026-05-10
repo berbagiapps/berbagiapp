@@ -55,8 +55,8 @@ model Campaign {
 
 // --- MODEL BARU UNTUK PERMINTAAN DONASI BARANG ---
 model DonationRequest {
-  id String @id @default(cuid())
-
+  id                  String  @id @default(cuid())
+  namaBarang          String?
   // Info Requestor
   requestorFirebaseId String // ID dari Firebase Auth
   requestorName       String // Nama pemohon
@@ -122,7 +122,7 @@ model DonationFulfillment {
   donationRequest        DonationRequest @relation(fields: [donationRequestId], references: [id])
   chatRoom               ChatRoom?
 
-  @@unique([donationRequestId, donorNotes, donorFirebaseId,donorName])
+  @@unique([donationRequestId, donorNotes, donorFirebaseId, donorName])
 }
 
 model DonationRequestment {
@@ -142,7 +142,7 @@ model DonationRequestment {
   donationRequest   DonationRequest @relation(fields: [donationRequestId], references: [id])
   chatRoom          ChatRoom?
 
-  @@unique([donationRequestId, requestorId, reason,donorName])
+  @@unique([donationRequestId, requestorId, reason, donorName])
 }
 
 model Token {
@@ -154,15 +154,15 @@ model Token {
 }
 
 model User {
-  id        String  @id @default(uuid())
-  name      String?
-  email     String? @unique
-  role      String?
-  password  String?
-  isActive  Boolean @default(false)
-  isDonate  Boolean @default(false)
-  isPhotoId Boolean @default(false)
-  token     String? 
+  id                   String  @id @default(uuid())
+  name                 String?
+  email                String? @unique
+  role                 String?
+  password             String?
+  isActive             Boolean @default(false)
+  isDonate             Boolean @default(false)
+  isPhotoId            Boolean @default(false)
+  token                String?
   identificationNumber String?
   photoKtp             String?
   // Nama relasi di sini harus sama dengan yang ada di model Chat

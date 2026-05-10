@@ -5273,6 +5273,7 @@ export namespace Prisma {
 
   export type DonationRequestMinAggregateOutputType = {
     id: string | null
+    namaBarang: string | null
     requestorFirebaseId: string | null
     requestorName: string | null
     donationType: string | null
@@ -5294,6 +5295,7 @@ export namespace Prisma {
 
   export type DonationRequestMaxAggregateOutputType = {
     id: string | null
+    namaBarang: string | null
     requestorFirebaseId: string | null
     requestorName: string | null
     donationType: string | null
@@ -5315,6 +5317,7 @@ export namespace Prisma {
 
   export type DonationRequestCountAggregateOutputType = {
     id: number
+    namaBarang: number
     requestorFirebaseId: number
     requestorName: number
     donationType: number
@@ -5350,6 +5353,7 @@ export namespace Prisma {
 
   export type DonationRequestMinAggregateInputType = {
     id?: true
+    namaBarang?: true
     requestorFirebaseId?: true
     requestorName?: true
     donationType?: true
@@ -5371,6 +5375,7 @@ export namespace Prisma {
 
   export type DonationRequestMaxAggregateInputType = {
     id?: true
+    namaBarang?: true
     requestorFirebaseId?: true
     requestorName?: true
     donationType?: true
@@ -5392,6 +5397,7 @@ export namespace Prisma {
 
   export type DonationRequestCountAggregateInputType = {
     id?: true
+    namaBarang?: true
     requestorFirebaseId?: true
     requestorName?: true
     donationType?: true
@@ -5500,6 +5506,7 @@ export namespace Prisma {
 
   export type DonationRequestGroupByOutputType = {
     id: string
+    namaBarang: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType: string | null
@@ -5540,6 +5547,7 @@ export namespace Prisma {
 
   export type DonationRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    namaBarang?: boolean
     requestorFirebaseId?: boolean
     requestorName?: boolean
     donationType?: boolean
@@ -5566,6 +5574,7 @@ export namespace Prisma {
 
   export type DonationRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    namaBarang?: boolean
     requestorFirebaseId?: boolean
     requestorName?: boolean
     donationType?: boolean
@@ -5587,6 +5596,7 @@ export namespace Prisma {
 
   export type DonationRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    namaBarang?: boolean
     requestorFirebaseId?: boolean
     requestorName?: boolean
     donationType?: boolean
@@ -5608,6 +5618,7 @@ export namespace Prisma {
 
   export type DonationRequestSelectScalar = {
     id?: boolean
+    namaBarang?: boolean
     requestorFirebaseId?: boolean
     requestorName?: boolean
     donationType?: boolean
@@ -5627,7 +5638,7 @@ export namespace Prisma {
     expiredAt?: boolean
   }
 
-  export type DonationRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "requestorFirebaseId" | "requestorName" | "donationType" | "detailBarang" | "alasanDonasi" | "locationDescription" | "latitude" | "longitude" | "city" | "description" | "itemType" | "itemWeight" | "weightUnit" | "status" | "createdAt" | "updatedAt" | "expiredAt", ExtArgs["result"]["donationRequest"]>
+  export type DonationRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "namaBarang" | "requestorFirebaseId" | "requestorName" | "donationType" | "detailBarang" | "alasanDonasi" | "locationDescription" | "latitude" | "longitude" | "city" | "description" | "itemType" | "itemWeight" | "weightUnit" | "status" | "createdAt" | "updatedAt" | "expiredAt", ExtArgs["result"]["donationRequest"]>
   export type DonationRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     photoDonations?: boolean | DonationRequest$photoDonationsArgs<ExtArgs>
     fulfillments?: boolean | DonationRequest$fulfillmentsArgs<ExtArgs>
@@ -5648,6 +5659,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      namaBarang: string | null
       requestorFirebaseId: string
       requestorName: string
       donationType: string | null
@@ -6093,6 +6105,7 @@ export namespace Prisma {
    */
   interface DonationRequestFieldRefs {
     readonly id: FieldRef<"DonationRequest", 'String'>
+    readonly namaBarang: FieldRef<"DonationRequest", 'String'>
     readonly requestorFirebaseId: FieldRef<"DonationRequest", 'String'>
     readonly requestorName: FieldRef<"DonationRequest", 'String'>
     readonly donationType: FieldRef<"DonationRequest", 'String'>
@@ -16867,6 +16880,7 @@ export namespace Prisma {
 
   export const DonationRequestScalarFieldEnum: {
     id: 'id',
+    namaBarang: 'namaBarang',
     requestorFirebaseId: 'requestorFirebaseId',
     requestorName: 'requestorName',
     donationType: 'donationType',
@@ -17324,6 +17338,7 @@ export namespace Prisma {
     OR?: DonationRequestWhereInput[]
     NOT?: DonationRequestWhereInput | DonationRequestWhereInput[]
     id?: StringFilter<"DonationRequest"> | string
+    namaBarang?: StringNullableFilter<"DonationRequest"> | string | null
     requestorFirebaseId?: StringFilter<"DonationRequest"> | string
     requestorName?: StringFilter<"DonationRequest"> | string
     donationType?: StringNullableFilter<"DonationRequest"> | string | null
@@ -17349,6 +17364,7 @@ export namespace Prisma {
 
   export type DonationRequestOrderByWithRelationInput = {
     id?: SortOrder
+    namaBarang?: SortOrderInput | SortOrder
     requestorFirebaseId?: SortOrder
     requestorName?: SortOrder
     donationType?: SortOrderInput | SortOrder
@@ -17378,6 +17394,7 @@ export namespace Prisma {
     AND?: DonationRequestWhereInput | DonationRequestWhereInput[]
     OR?: DonationRequestWhereInput[]
     NOT?: DonationRequestWhereInput | DonationRequestWhereInput[]
+    namaBarang?: StringNullableFilter<"DonationRequest"> | string | null
     requestorFirebaseId?: StringFilter<"DonationRequest"> | string
     requestorName?: StringFilter<"DonationRequest"> | string
     donationType?: StringNullableFilter<"DonationRequest"> | string | null
@@ -17403,6 +17420,7 @@ export namespace Prisma {
 
   export type DonationRequestOrderByWithAggregationInput = {
     id?: SortOrder
+    namaBarang?: SortOrderInput | SortOrder
     requestorFirebaseId?: SortOrder
     requestorName?: SortOrder
     donationType?: SortOrderInput | SortOrder
@@ -17432,6 +17450,7 @@ export namespace Prisma {
     OR?: DonationRequestScalarWhereWithAggregatesInput[]
     NOT?: DonationRequestScalarWhereWithAggregatesInput | DonationRequestScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"DonationRequest"> | string
+    namaBarang?: StringNullableWithAggregatesFilter<"DonationRequest"> | string | null
     requestorFirebaseId?: StringWithAggregatesFilter<"DonationRequest"> | string
     requestorName?: StringWithAggregatesFilter<"DonationRequest"> | string
     donationType?: StringNullableWithAggregatesFilter<"DonationRequest"> | string | null
@@ -18332,6 +18351,7 @@ export namespace Prisma {
 
   export type DonationRequestCreateInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -18357,6 +18377,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedCreateInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -18382,6 +18403,7 @@ export namespace Prisma {
 
   export type DonationRequestUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18407,6 +18429,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18432,6 +18455,7 @@ export namespace Prisma {
 
   export type DonationRequestCreateManyInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -18453,6 +18477,7 @@ export namespace Prisma {
 
   export type DonationRequestUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18474,6 +18499,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19524,6 +19550,7 @@ export namespace Prisma {
 
   export type DonationRequestCountOrderByAggregateInput = {
     id?: SortOrder
+    namaBarang?: SortOrder
     requestorFirebaseId?: SortOrder
     requestorName?: SortOrder
     donationType?: SortOrder
@@ -19551,6 +19578,7 @@ export namespace Prisma {
 
   export type DonationRequestMaxOrderByAggregateInput = {
     id?: SortOrder
+    namaBarang?: SortOrder
     requestorFirebaseId?: SortOrder
     requestorName?: SortOrder
     donationType?: SortOrder
@@ -19572,6 +19600,7 @@ export namespace Prisma {
 
   export type DonationRequestMinOrderByAggregateInput = {
     id?: SortOrder
+    namaBarang?: SortOrder
     requestorFirebaseId?: SortOrder
     requestorName?: SortOrder
     donationType?: SortOrder
@@ -21342,6 +21371,7 @@ export namespace Prisma {
 
   export type DonationRequestCreateWithoutPhotoDonationsInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -21366,6 +21396,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedCreateWithoutPhotoDonationsInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -21406,6 +21437,7 @@ export namespace Prisma {
 
   export type DonationRequestUpdateWithoutPhotoDonationsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21430,6 +21462,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedUpdateWithoutPhotoDonationsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21454,6 +21487,7 @@ export namespace Prisma {
 
   export type DonationRequestCreateWithoutFulfillmentsInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -21478,6 +21512,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedCreateWithoutFulfillmentsInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -21553,6 +21588,7 @@ export namespace Prisma {
 
   export type DonationRequestUpdateWithoutFulfillmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21577,6 +21613,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedUpdateWithoutFulfillmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21642,6 +21679,7 @@ export namespace Prisma {
 
   export type DonationRequestCreateWithoutDonationRequestmentsInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -21666,6 +21704,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedCreateWithoutDonationRequestmentsInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -21741,6 +21780,7 @@ export namespace Prisma {
 
   export type DonationRequestUpdateWithoutDonationRequestmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21765,6 +21805,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedUpdateWithoutDonationRequestmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21970,6 +22011,7 @@ export namespace Prisma {
 
   export type DonationRequestCreateWithoutChatRoomsInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -21994,6 +22036,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedCreateWithoutChatRoomsInput = {
     id?: string
+    namaBarang?: string | null
     requestorFirebaseId: string
     requestorName: string
     donationType?: string | null
@@ -22156,6 +22199,7 @@ export namespace Prisma {
 
   export type DonationRequestUpdateWithoutChatRoomsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22180,6 +22224,7 @@ export namespace Prisma {
 
   export type DonationRequestUncheckedUpdateWithoutChatRoomsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
     requestorFirebaseId?: StringFieldUpdateOperationsInput | string
     requestorName?: StringFieldUpdateOperationsInput | string
     donationType?: NullableStringFieldUpdateOperationsInput | string | null

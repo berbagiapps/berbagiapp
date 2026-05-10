@@ -150,6 +150,7 @@ exports.Prisma.CampaignScalarFieldEnum = {
 
 exports.Prisma.DonationRequestScalarFieldEnum = {
   id: 'id',
+  namaBarang: 'namaBarang',
   requestorFirebaseId: 'requestorFirebaseId',
   requestorName: 'requestorName',
   donationType: 'donationType',

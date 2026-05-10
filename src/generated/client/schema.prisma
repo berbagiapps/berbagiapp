@@ -55,8 +55,8 @@ model Campaign {
 
 // --- MODEL BARU UNTUK PERMINTAAN DONASI BARANG ---
 model DonationRequest {
-  id String @id @default(cuid())
-
+  id                  String  @id @default(cuid())
+  namaBarang          String?
   // Info Requestor
   requestorFirebaseId String // ID dari Firebase Auth
   requestorName       String // Nama pemohon

@@ -14,6 +14,7 @@ router.post(
     const requestorFirebaseId = req.user.id;
 
     const {
+      namaBarang,
       requestorName,
       locationDescription,
       detailBarang,
@@ -46,7 +47,9 @@ router.post(
         data: {
           requestorFirebaseId,
           requestorName,
-          expiredAt: expiredAt ? new Date(`${expiredAt}T00:00:00Z`) : null, alasanDonasi,
+          expiredAt: expiredAt ? new Date(`${expiredAt}T00:00:00Z`) : null,
+   
+          alasanDonasi,
           detailBarang,
           locationDescription,
           latitude: latitude ? parseFloat(latitude) : null,
