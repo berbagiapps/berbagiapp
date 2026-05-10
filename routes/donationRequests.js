@@ -48,7 +48,7 @@ router.post(
           requestorFirebaseId,
           requestorName,
           expiredAt: expiredAt ? new Date(`${expiredAt}T00:00:00Z`) : null,
-
+          namaBarang,
           alasanDonasi,
           detailBarang,
           locationDescription,
