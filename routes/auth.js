@@ -40,6 +40,33 @@ router.get("/getUser", authenticateUser, async (req, res) => {
     });
   }
 });
+router.post("/updateToken", authenticateUser, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { tokenFcm } = req.body;
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        token: token,
+      },
+    });
+
+    return res.status(200).json({
+      message: "Token updated",
+      data: user,
+    });
+
+  } catch (error) {
+    console.error("UPDATE TOKEN ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to update token",
+    });
+  }
+});
 
 router.put("/profile", authenticateUser, async (req, res) => {
   try {
@@ -86,8 +113,8 @@ router.put("/profile", authenticateUser, async (req, res) => {
       message: "Failed to update profile",
     });
   }
-});router.post("/login", async function (req, res, next) {
-  const { email, password } = req.body;
+}); router.post("/login", async function (req, res, next) {
+  const { email, password, tokenFcm } = req.body;
 
   if (!email || !password) {
     return res.status(401).send({ message: "Email dan kata sandi wajib diisi" });
@@ -102,7 +129,14 @@ router.put("/profile", authenticateUser, async (req, res) => {
         email: normalizedEmail // Gunakan email yang sudah di-lowercase
       }
     });
-
+    await prisma.user.update({
+      where: {
+        email: normalizedEmail,
+      },
+      data: {
+        token: tokenFcm,
+      },
+    });
     if (!user) {
       return res.status(401).send({ message: "Email tidak ditemukan" });
     }
@@ -138,7 +172,8 @@ router.put("/profile", authenticateUser, async (req, res) => {
 });
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, identificationNumber } = req.body;
+    const { name, email, password, identificationNumber, token } = req.body;
+
 
     // 🔍 cek user dulu
     const existingUser = await prisma.user.findUnique({
@@ -147,7 +182,7 @@ router.post("/register", async (req, res) => {
 
     // ⚠️ kalau user sudah ada
     if (existingUser) {
-      if (!existingUser.isActive) {
+      if (existingUser.isActive == true) {
         sendActivationEmail(email);
         return res.status(400).send({
           message: "User exists but not active, activation email sent again"
@@ -167,6 +202,7 @@ router.post("/register", async (req, res) => {
       data: {
         name,
         email,
+        token,
         role: "user",
         identificationNumber,
         password: hashedPassword,
@@ -234,7 +270,7 @@ router.post("/forget-password", async function (req, res, next) {
 
   try {
     const result = await transporter.sendMail({
-      from: "githa@stem.or.id", // ✅ HARUS valid
+      from: "berbagiapps@stem.or.id", // ✅ HARUS valid
       to: email,
       subject: "Reset Password",
       text:

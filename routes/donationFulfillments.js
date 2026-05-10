@@ -170,6 +170,7 @@ router.get("/helping", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+  //helped
   try {
     const donorFirebaseId = req.user.id;
 

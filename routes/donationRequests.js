@@ -4,6 +4,7 @@ const prisma = require("../lib/prisma");
 const authenticateUser = require("../middleware/authMiddleware");
 const { upload } = require("../middleware/multer");
 const { Prisma } = require("@prisma/client");
+const sendPushNotification = require("./sendPushNotification");
 
 router.post(
   "/",
@@ -68,6 +69,13 @@ router.post(
           photoDonations: true,
         },
       });
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id: requestorFirebaseId
+
+        }
+      });
       console.log(req.body);
       await prisma.user.update({
         where: {
@@ -77,8 +85,13 @@ router.post(
           isDonate: true,
         },
       });
-
-      res.status(201).json({
+if (user?.token) {
+  await sendPushNotification({
+    token: user.token,
+    title: "Donasi berhasil dibuat",
+    body: "Permintaan donasi kamu berhasil diposting",
+  });
+}      res.status(201).json({
         message: "Permintaan donasi berhasil dibuat!",
         data: newDonationRequest,
       })
@@ -202,7 +215,7 @@ router.get("/", authenticateUser, async (req, res) => {
   }
 });
 
-router.get("/get/:id",authenticateUser, async (req, res) => {
+router.get("/get/:id", authenticateUser, async (req, res) => {
   const { id } = req.params;
 
   try {
