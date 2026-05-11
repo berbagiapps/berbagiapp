@@ -96,8 +96,10 @@ router.post(
         console.log(user.tokenFcm)
         await sendPushNotification({
           token: user.tokenFcm,
+          userId: user.id, // 👈 WAJIB TAMBAH INI
           title: "Donasi berhasil dibuat",
           body: "Permintaan donasi kamu berhasil diposting",
+          notificationType: "CREATE_DONATION", // 👈 WAJIB ENUM
         });
       } res.status(201).json({
         message: "Permintaan donasi berhasil dibuat!",
@@ -193,11 +195,11 @@ router.get("/", authenticateUser, async (req, res) => {
         },
         skip: offset,
         take: limit,
-         include: {
-      photoDonations: true, // 👈 ini yang penting
-    },
+        include: {
+          photoDonations: true, // 👈 ini yang penting
+        },
       }),
-      
+
 
       prisma.donationRequest.count({
         where: whereCondition,

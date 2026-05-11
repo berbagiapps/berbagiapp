@@ -130,7 +130,7 @@ exports.Prisma.TermsConditionScalarFieldEnum = {
 exports.Prisma.NotificationScalarFieldEnum = {
   id: 'id',
   notification: 'notification',
-  uuid: 'uuid',
+  token: 'token',
   userid: 'userid',
   notifType: 'notifType',
   createdAt: 'createdAt',
@@ -175,6 +175,15 @@ exports.Prisma.PhotoDonationScalarFieldEnum = {
   imageFile: 'imageFile',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  donationRequestId: 'donationRequestId'
+};
+
+exports.Prisma.PhotoChatRoomScalarFieldEnum = {
+  id: 'id',
+  chatRoomId: 'chatRoomId',
+  url: 'url',
+  thumbnail: 'thumbnail',
+  createdAt: 'createdAt',
   donationRequestId: 'donationRequestId'
 };
 
@@ -286,6 +295,12 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.NotificationType = exports.$Enums.NotificationType = {
+  CHAT_MESSAGE: 'CHAT_MESSAGE',
+  DONATION_CREATED: 'DONATION_CREATED',
+  DONATION_NEARBY: 'DONATION_NEARBY'
+};
+
 exports.RequestStatus = exports.$Enums.RequestStatus = {
   OPEN: 'OPEN',
   FULFILLED: 'FULFILLED',
@@ -301,6 +316,7 @@ exports.Prisma.ModelName = {
   Campaign: 'Campaign',
   DonationRequest: 'DonationRequest',
   PhotoDonation: 'PhotoDonation',
+  PhotoChatRoom: 'PhotoChatRoom',
   DonationFulfillment: 'DonationFulfillment',
   DonationRequestment: 'DonationRequestment',
   Token: 'Token',

@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
 // Mundur satu tingkat keluar dari folder 'routes', lalu masuk ke 'src/generated/client'
-const { PrismaClient } = require('../src/generated/client');const prisma = new PrismaClient();
+const { PrismaClient } = require('../src/generated/client'); const prisma = new PrismaClient();
 const authenticateUser = require("../middleware/authMiddleware");
+const sendPushNotification = require("./sendPushNotification");
 
 
 // =====================================
@@ -26,17 +27,17 @@ router.post("/create", authenticateUser, async (req, res) => {
         where: { id: fulfillmentId },
         include: { donationRequest: true }
       });
-      
+
       if (!fulfillment) return res.status(404).json({ message: "Fulfillment not found" });
-      
+
       // Lawan bicara: Jika saya donatur, maka lawan saya adalah requestor (owner). Begitu sebaliknya.
-      otherUserId = (currentUserId === fulfillment.donorFirebaseId) 
-        ? fulfillment.donationRequest.requestorFirebaseId 
+      otherUserId = (currentUserId === fulfillment.donorFirebaseId)
+        ? fulfillment.donationRequest.requestorFirebaseId
         : fulfillment.donorFirebaseId;
-        
+
       customRoomId = `fullfill_${fulfillmentId}`;
-    } 
-    
+    }
+
     // Skenario B: Chat berdasarkan Requestment (Penerima meminta barang)
     else if (requestmentId) {
       const requestment = await prisma.donationRequestment.findUnique({
@@ -51,8 +52,8 @@ router.post("/create", authenticateUser, async (req, res) => {
         : requestment.requestorId;
 
       customRoomId = `reqmt_${requestmentId}`;
-    } 
-    
+    }
+
     else {
       return res.status(400).json({ message: "fulfillmentId or requestmentId is required" });
     }
@@ -182,17 +183,17 @@ router.get("/rooms", authenticateUser, async (req, res) => {
         // =========================
         requestment: room.requestment
           ? {
-              id: room.requestment.id,
-              donorName: room.requestment.donorName,
-              reason: room.requestment.reason,
-              latitude: room.requestment.latitude,
-              longitude: room.requestment.longitude,
-              address: room.requestment.address,
-              city: room.requestment.city,
-              donationRequestId:
-                room.requestment.donationRequestId,
-              requestorId: room.requestment.requestorId,
-            }
+            id: room.requestment.id,
+            donorName: room.requestment.donorName,
+            reason: room.requestment.reason,
+            latitude: room.requestment.latitude,
+            longitude: room.requestment.longitude,
+            address: room.requestment.address,
+            city: room.requestment.city,
+            donationRequestId:
+              room.requestment.donationRequestId,
+            requestorId: room.requestment.requestorId,
+          }
           : null,
 
         // =========================
@@ -200,18 +201,18 @@ router.get("/rooms", authenticateUser, async (req, res) => {
         // =========================
         fulfillment: room.fulfillment
           ? {
-              id: room.fulfillment.id,
-              donorName: room.fulfillment.donorName,
-              donorNotes: room.fulfillment.donorNotes,
-              latitude: room.fulfillment.latitude,
-              longitude: room.fulfillment.longitude,
-              address: room.fulfillment.address,
-              city: room.fulfillment.city,
-              donationRequestId:
-                room.fulfillment.donationRequestId,
-              donorFirebaseId:
-                room.fulfillment.donorFirebaseId,
-            }
+            id: room.fulfillment.id,
+            donorName: room.fulfillment.donorName,
+            donorNotes: room.fulfillment.donorNotes,
+            latitude: room.fulfillment.latitude,
+            longitude: room.fulfillment.longitude,
+            address: room.fulfillment.address,
+            city: room.fulfillment.city,
+            donationRequestId:
+              room.fulfillment.donationRequestId,
+            donorFirebaseId:
+              room.fulfillment.donorFirebaseId,
+          }
           : null,
 
         // =========================
@@ -228,8 +229,8 @@ router.get("/rooms", authenticateUser, async (req, res) => {
         chatType: room.fulfillment
           ? "FULFILLMENT"
           : room.requestment
-          ? "REQUEST"
-          : "UNKNOWN",
+            ? "REQUEST"
+            : "UNKNOWN",
       };
     });
 
@@ -241,7 +242,7 @@ router.get("/rooms", authenticateUser, async (req, res) => {
     console.error("GET ROOMS ERROR:", error);
 
     return res.status(400).json({
-      message: "Failed to fetch rooms "+error,
+      message: "Failed to fetch rooms " + error,
     });
   }
 });
@@ -326,49 +327,79 @@ router.post("/send", authenticateUser, async (req, res) => {
 
     if (!roomId || !message) {
       return res.status(400).json({
-        message: "roomId and message required"
+        message: "roomId and message required",
       });
     }
 
     const room = await prisma.chatRoom.findFirst({
       where: {
-        OR: [
-          { id: roomId },
-          { roomId: roomId }
-        ]
+        OR: [{ id: roomId }, { roomId: roomId }],
       },
-      include: { members: true }
+      include: { members: true },
     });
 
     if (!room) {
       return res.status(404).json({
-        message: "Room not found"
+        message: "Room not found",
       });
     }
 
-    const isMember = room.members.some(m => m.userId === userId);
+    const isMember = room.members.some((m) => m.userId === userId);
     if (!isMember) {
       return res.status(403).json({
-        message: "Forbidden"
+        message: "Forbidden",
       });
     }
 
+    // =========================
+    // 1. SAVE CHAT
+    // =========================
     const chat = await prisma.chat.create({
       data: {
         roomId: room.id,
         senderId: userId,
-        message
+        message,
       },
-      include: { sender: true }
+      include: { sender: true },
     });
 
     await prisma.chatRoom.update({
       where: { id: room.id },
       data: {
         lastMessage: message,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     });
+
+    // =========================
+    // 2. FIND RECEIVER
+    // =========================
+    const receiver = room.members.find(
+      (m) => m.userId !== userId
+    );
+
+    if (receiver) {
+      const receiverUser = await prisma.user.findUnique({
+        where: { id: receiver.userId },
+      });
+
+      // =========================
+      // 3. SEND PUSH NOTIF
+      // =========================
+      if (receiverUser?.tokenFcm) {
+        await sendPushNotification({
+          token: receiverUser.tokenFcm,
+          userId: receiverUser.id,
+          title: "Pesan Baru",
+          body: message,
+          notificationType: "CHAT_MESSAGE",
+          data: {
+            roomId: room.roomId,
+            senderId: userId,
+          },
+        });
+      }
+    }
 
     return res.status(201).json({
       message: "Message sent",
@@ -378,14 +409,13 @@ router.post("/send", authenticateUser, async (req, res) => {
         message: chat.message,
         senderId: chat.senderId,
         sender: chat.sender,
-        createdAt: chat.createdAt
-      }
+        createdAt: chat.createdAt,
+      },
     });
-
   } catch (error) {
     console.error("SEND MESSAGE ERROR:", error);
     return res.status(500).json({
-      message: "Failed to send message"
+      message: "Failed to send message",
     });
   }
 });

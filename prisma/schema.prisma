@@ -18,6 +18,12 @@ enum RequestStatus {
   CONFIRMED // Permintaan dibatalkan
 }
 
+enum NotificationType {
+  CHAT_MESSAGE
+  DONATION_CREATED
+  DONATION_NEARBY
+}
+
 model termsCondition {
   id        String   @id @default(cuid())
   userid    String
@@ -28,9 +34,9 @@ model termsCondition {
 model Notification {
   id           String   @id @default(cuid())
   notification String
-  uuid         String?
+  token        String?
   userid       String
-  notifType    String
+  notifType    NotificationType
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -86,6 +92,7 @@ model DonationRequest {
   fulfillments         DonationFulfillment[]
   chatRooms            ChatRoom[]
   donationRequestments DonationRequestment[]
+  photoChatRooms       PhotoChatRoom[]
 
   @@unique([detailBarang, itemType, alasanDonasi, requestorFirebaseId])
 }
@@ -97,6 +104,19 @@ model PhotoDonation {
   updatedAt         DateTime        @updatedAt
   donationRequestId String
   donationRequest   DonationRequest @relation(fields: [donationRequestId], references: [id])
+}
+
+model PhotoChatRoom {
+  id         String   @id @default(cuid())
+  chatRoomId String   @unique // 👈 wajib UNIQUE untuk 1-1
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+
+  url       String
+  thumbnail String? // untuk preview cepat
+
+  createdAt         DateTime         @default(now())
+  donationRequest   DonationRequest? @relation(fields: [donationRequestId], references: [id])
+  donationRequestId String?
 }
 
 // --- MODEL BARU UNTUK MENCATAT PEMENUHAN DONASI (DARI DONATUR) ---
@@ -197,6 +217,7 @@ model ChatRoom {
 
   members ChatRoomMember[]
   chats   Chat[]
+  photo   PhotoChatRoom? // 👈 1 to 1 relation
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -39,6 +39,11 @@ export type DonationRequest = $Result.DefaultSelection<Prisma.$DonationRequestPa
  */
 export type PhotoDonation = $Result.DefaultSelection<Prisma.$PhotoDonationPayload>
 /**
+ * Model PhotoChatRoom
+ * 
+ */
+export type PhotoChatRoom = $Result.DefaultSelection<Prisma.$PhotoChatRoomPayload>
+/**
  * Model DonationFulfillment
  * 
  */
@@ -94,11 +99,24 @@ export namespace $Enums {
 
 export type RequestStatus = (typeof RequestStatus)[keyof typeof RequestStatus]
 
+
+export const NotificationType: {
+  CHAT_MESSAGE: 'CHAT_MESSAGE',
+  DONATION_CREATED: 'DONATION_CREATED',
+  DONATION_NEARBY: 'DONATION_NEARBY'
+};
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
 }
 
 export type RequestStatus = $Enums.RequestStatus
 
 export const RequestStatus: typeof $Enums.RequestStatus
+
+export type NotificationType = $Enums.NotificationType
+
+export const NotificationType: typeof $Enums.NotificationType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -274,6 +292,16 @@ export class PrismaClient<
     * ```
     */
   get photoDonation(): Prisma.PhotoDonationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.photoChatRoom`: Exposes CRUD operations for the **PhotoChatRoom** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PhotoChatRooms
+    * const photoChatRooms = await prisma.photoChatRoom.findMany()
+    * ```
+    */
+  get photoChatRoom(): Prisma.PhotoChatRoomDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.donationFulfillment`: Exposes CRUD operations for the **DonationFulfillment** model.
@@ -799,6 +827,7 @@ export namespace Prisma {
     Campaign: 'Campaign',
     DonationRequest: 'DonationRequest',
     PhotoDonation: 'PhotoDonation',
+    PhotoChatRoom: 'PhotoChatRoom',
     DonationFulfillment: 'DonationFulfillment',
     DonationRequestment: 'DonationRequestment',
     Token: 'Token',
@@ -825,7 +854,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "termsCondition" | "notification" | "campaign" | "donationRequest" | "photoDonation" | "donationFulfillment" | "donationRequestment" | "token" | "user" | "chatRoom" | "chatRoomMember" | "chat" | "fundDonationHistory"
+      modelProps: "termsCondition" | "notification" | "campaign" | "donationRequest" | "photoDonation" | "photoChatRoom" | "donationFulfillment" | "donationRequestment" | "token" | "user" | "chatRoom" | "chatRoomMember" | "chat" | "fundDonationHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1196,6 +1225,80 @@ export namespace Prisma {
           count: {
             args: Prisma.PhotoDonationCountArgs<ExtArgs>
             result: $Utils.Optional<PhotoDonationCountAggregateOutputType> | number
+          }
+        }
+      }
+      PhotoChatRoom: {
+        payload: Prisma.$PhotoChatRoomPayload<ExtArgs>
+        fields: Prisma.PhotoChatRoomFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PhotoChatRoomFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PhotoChatRoomFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>
+          }
+          findFirst: {
+            args: Prisma.PhotoChatRoomFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PhotoChatRoomFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>
+          }
+          findMany: {
+            args: Prisma.PhotoChatRoomFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>[]
+          }
+          create: {
+            args: Prisma.PhotoChatRoomCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>
+          }
+          createMany: {
+            args: Prisma.PhotoChatRoomCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PhotoChatRoomCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>[]
+          }
+          delete: {
+            args: Prisma.PhotoChatRoomDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>
+          }
+          update: {
+            args: Prisma.PhotoChatRoomUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>
+          }
+          deleteMany: {
+            args: Prisma.PhotoChatRoomDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PhotoChatRoomUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PhotoChatRoomUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>[]
+          }
+          upsert: {
+            args: Prisma.PhotoChatRoomUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PhotoChatRoomPayload>
+          }
+          aggregate: {
+            args: Prisma.PhotoChatRoomAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePhotoChatRoom>
+          }
+          groupBy: {
+            args: Prisma.PhotoChatRoomGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PhotoChatRoomGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PhotoChatRoomCountArgs<ExtArgs>
+            result: $Utils.Optional<PhotoChatRoomCountAggregateOutputType> | number
           }
         }
       }
@@ -1888,6 +1991,7 @@ export namespace Prisma {
     campaign?: CampaignOmit
     donationRequest?: DonationRequestOmit
     photoDonation?: PhotoDonationOmit
+    photoChatRoom?: PhotoChatRoomOmit
     donationFulfillment?: DonationFulfillmentOmit
     donationRequestment?: DonationRequestmentOmit
     token?: TokenOmit
@@ -1999,6 +2103,7 @@ export namespace Prisma {
     fulfillments: number
     chatRooms: number
     donationRequestments: number
+    photoChatRooms: number
   }
 
   export type DonationRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2006,6 +2111,7 @@ export namespace Prisma {
     fulfillments?: boolean | DonationRequestCountOutputTypeCountFulfillmentsArgs
     chatRooms?: boolean | DonationRequestCountOutputTypeCountChatRoomsArgs
     donationRequestments?: boolean | DonationRequestCountOutputTypeCountDonationRequestmentsArgs
+    photoChatRooms?: boolean | DonationRequestCountOutputTypeCountPhotoChatRoomsArgs
   }
 
   // Custom InputTypes
@@ -2045,6 +2151,13 @@ export namespace Prisma {
    */
   export type DonationRequestCountOutputTypeCountDonationRequestmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DonationRequestmentWhereInput
+  }
+
+  /**
+   * DonationRequestCountOutputType without action
+   */
+  export type DonationRequestCountOutputTypeCountPhotoChatRoomsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PhotoChatRoomWhereInput
   }
 
 
@@ -3167,9 +3280,9 @@ export namespace Prisma {
   export type NotificationMinAggregateOutputType = {
     id: string | null
     notification: string | null
-    uuid: string | null
+    token: string | null
     userid: string | null
-    notifType: string | null
+    notifType: $Enums.NotificationType | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3177,9 +3290,9 @@ export namespace Prisma {
   export type NotificationMaxAggregateOutputType = {
     id: string | null
     notification: string | null
-    uuid: string | null
+    token: string | null
     userid: string | null
-    notifType: string | null
+    notifType: $Enums.NotificationType | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3187,7 +3300,7 @@ export namespace Prisma {
   export type NotificationCountAggregateOutputType = {
     id: number
     notification: number
-    uuid: number
+    token: number
     userid: number
     notifType: number
     createdAt: number
@@ -3199,7 +3312,7 @@ export namespace Prisma {
   export type NotificationMinAggregateInputType = {
     id?: true
     notification?: true
-    uuid?: true
+    token?: true
     userid?: true
     notifType?: true
     createdAt?: true
@@ -3209,7 +3322,7 @@ export namespace Prisma {
   export type NotificationMaxAggregateInputType = {
     id?: true
     notification?: true
-    uuid?: true
+    token?: true
     userid?: true
     notifType?: true
     createdAt?: true
@@ -3219,7 +3332,7 @@ export namespace Prisma {
   export type NotificationCountAggregateInputType = {
     id?: true
     notification?: true
-    uuid?: true
+    token?: true
     userid?: true
     notifType?: true
     createdAt?: true
@@ -3302,9 +3415,9 @@ export namespace Prisma {
   export type NotificationGroupByOutputType = {
     id: string
     notification: string
-    uuid: string | null
+    token: string | null
     userid: string
-    notifType: string
+    notifType: $Enums.NotificationType
     createdAt: Date
     updatedAt: Date
     _count: NotificationCountAggregateOutputType | null
@@ -3329,7 +3442,7 @@ export namespace Prisma {
   export type NotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     notification?: boolean
-    uuid?: boolean
+    token?: boolean
     userid?: boolean
     notifType?: boolean
     createdAt?: boolean
@@ -3339,7 +3452,7 @@ export namespace Prisma {
   export type NotificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     notification?: boolean
-    uuid?: boolean
+    token?: boolean
     userid?: boolean
     notifType?: boolean
     createdAt?: boolean
@@ -3349,7 +3462,7 @@ export namespace Prisma {
   export type NotificationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     notification?: boolean
-    uuid?: boolean
+    token?: boolean
     userid?: boolean
     notifType?: boolean
     createdAt?: boolean
@@ -3359,14 +3472,14 @@ export namespace Prisma {
   export type NotificationSelectScalar = {
     id?: boolean
     notification?: boolean
-    uuid?: boolean
+    token?: boolean
     userid?: boolean
     notifType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "notification" | "uuid" | "userid" | "notifType" | "createdAt" | "updatedAt", ExtArgs["result"]["notification"]>
+  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "notification" | "token" | "userid" | "notifType" | "createdAt" | "updatedAt", ExtArgs["result"]["notification"]>
 
   export type $NotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Notification"
@@ -3374,9 +3487,9 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       notification: string
-      uuid: string | null
+      token: string | null
       userid: string
-      notifType: string
+      notifType: $Enums.NotificationType
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["notification"]>
@@ -3804,9 +3917,9 @@ export namespace Prisma {
   interface NotificationFieldRefs {
     readonly id: FieldRef<"Notification", 'String'>
     readonly notification: FieldRef<"Notification", 'String'>
-    readonly uuid: FieldRef<"Notification", 'String'>
+    readonly token: FieldRef<"Notification", 'String'>
     readonly userid: FieldRef<"Notification", 'String'>
-    readonly notifType: FieldRef<"Notification", 'String'>
+    readonly notifType: FieldRef<"Notification", 'NotificationType'>
     readonly createdAt: FieldRef<"Notification", 'DateTime'>
     readonly updatedAt: FieldRef<"Notification", 'DateTime'>
   }
@@ -5569,6 +5682,7 @@ export namespace Prisma {
     fulfillments?: boolean | DonationRequest$fulfillmentsArgs<ExtArgs>
     chatRooms?: boolean | DonationRequest$chatRoomsArgs<ExtArgs>
     donationRequestments?: boolean | DonationRequest$donationRequestmentsArgs<ExtArgs>
+    photoChatRooms?: boolean | DonationRequest$photoChatRoomsArgs<ExtArgs>
     _count?: boolean | DonationRequestCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["donationRequest"]>
 
@@ -5644,6 +5758,7 @@ export namespace Prisma {
     fulfillments?: boolean | DonationRequest$fulfillmentsArgs<ExtArgs>
     chatRooms?: boolean | DonationRequest$chatRoomsArgs<ExtArgs>
     donationRequestments?: boolean | DonationRequest$donationRequestmentsArgs<ExtArgs>
+    photoChatRooms?: boolean | DonationRequest$photoChatRoomsArgs<ExtArgs>
     _count?: boolean | DonationRequestCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DonationRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5656,6 +5771,7 @@ export namespace Prisma {
       fulfillments: Prisma.$DonationFulfillmentPayload<ExtArgs>[]
       chatRooms: Prisma.$ChatRoomPayload<ExtArgs>[]
       donationRequestments: Prisma.$DonationRequestmentPayload<ExtArgs>[]
+      photoChatRooms: Prisma.$PhotoChatRoomPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6075,6 +6191,7 @@ export namespace Prisma {
     fulfillments<T extends DonationRequest$fulfillmentsArgs<ExtArgs> = {}>(args?: Subset<T, DonationRequest$fulfillmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DonationFulfillmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatRooms<T extends DonationRequest$chatRoomsArgs<ExtArgs> = {}>(args?: Subset<T, DonationRequest$chatRoomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     donationRequestments<T extends DonationRequest$donationRequestmentsArgs<ExtArgs> = {}>(args?: Subset<T, DonationRequest$donationRequestmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DonationRequestmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    photoChatRooms<T extends DonationRequest$photoChatRoomsArgs<ExtArgs> = {}>(args?: Subset<T, DonationRequest$photoChatRoomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6604,6 +6721,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DonationRequestmentScalarFieldEnum | DonationRequestmentScalarFieldEnum[]
+  }
+
+  /**
+   * DonationRequest.photoChatRooms
+   */
+  export type DonationRequest$photoChatRoomsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    where?: PhotoChatRoomWhereInput
+    orderBy?: PhotoChatRoomOrderByWithRelationInput | PhotoChatRoomOrderByWithRelationInput[]
+    cursor?: PhotoChatRoomWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PhotoChatRoomScalarFieldEnum | PhotoChatRoomScalarFieldEnum[]
   }
 
   /**
@@ -7680,6 +7821,1104 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PhotoDonationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PhotoChatRoom
+   */
+
+  export type AggregatePhotoChatRoom = {
+    _count: PhotoChatRoomCountAggregateOutputType | null
+    _min: PhotoChatRoomMinAggregateOutputType | null
+    _max: PhotoChatRoomMaxAggregateOutputType | null
+  }
+
+  export type PhotoChatRoomMinAggregateOutputType = {
+    id: string | null
+    chatRoomId: string | null
+    url: string | null
+    thumbnail: string | null
+    createdAt: Date | null
+    donationRequestId: string | null
+  }
+
+  export type PhotoChatRoomMaxAggregateOutputType = {
+    id: string | null
+    chatRoomId: string | null
+    url: string | null
+    thumbnail: string | null
+    createdAt: Date | null
+    donationRequestId: string | null
+  }
+
+  export type PhotoChatRoomCountAggregateOutputType = {
+    id: number
+    chatRoomId: number
+    url: number
+    thumbnail: number
+    createdAt: number
+    donationRequestId: number
+    _all: number
+  }
+
+
+  export type PhotoChatRoomMinAggregateInputType = {
+    id?: true
+    chatRoomId?: true
+    url?: true
+    thumbnail?: true
+    createdAt?: true
+    donationRequestId?: true
+  }
+
+  export type PhotoChatRoomMaxAggregateInputType = {
+    id?: true
+    chatRoomId?: true
+    url?: true
+    thumbnail?: true
+    createdAt?: true
+    donationRequestId?: true
+  }
+
+  export type PhotoChatRoomCountAggregateInputType = {
+    id?: true
+    chatRoomId?: true
+    url?: true
+    thumbnail?: true
+    createdAt?: true
+    donationRequestId?: true
+    _all?: true
+  }
+
+  export type PhotoChatRoomAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PhotoChatRoom to aggregate.
+     */
+    where?: PhotoChatRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PhotoChatRooms to fetch.
+     */
+    orderBy?: PhotoChatRoomOrderByWithRelationInput | PhotoChatRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PhotoChatRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PhotoChatRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PhotoChatRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PhotoChatRooms
+    **/
+    _count?: true | PhotoChatRoomCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PhotoChatRoomMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PhotoChatRoomMaxAggregateInputType
+  }
+
+  export type GetPhotoChatRoomAggregateType<T extends PhotoChatRoomAggregateArgs> = {
+        [P in keyof T & keyof AggregatePhotoChatRoom]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePhotoChatRoom[P]>
+      : GetScalarType<T[P], AggregatePhotoChatRoom[P]>
+  }
+
+
+
+
+  export type PhotoChatRoomGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PhotoChatRoomWhereInput
+    orderBy?: PhotoChatRoomOrderByWithAggregationInput | PhotoChatRoomOrderByWithAggregationInput[]
+    by: PhotoChatRoomScalarFieldEnum[] | PhotoChatRoomScalarFieldEnum
+    having?: PhotoChatRoomScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PhotoChatRoomCountAggregateInputType | true
+    _min?: PhotoChatRoomMinAggregateInputType
+    _max?: PhotoChatRoomMaxAggregateInputType
+  }
+
+  export type PhotoChatRoomGroupByOutputType = {
+    id: string
+    chatRoomId: string
+    url: string
+    thumbnail: string | null
+    createdAt: Date
+    donationRequestId: string | null
+    _count: PhotoChatRoomCountAggregateOutputType | null
+    _min: PhotoChatRoomMinAggregateOutputType | null
+    _max: PhotoChatRoomMaxAggregateOutputType | null
+  }
+
+  type GetPhotoChatRoomGroupByPayload<T extends PhotoChatRoomGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PhotoChatRoomGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PhotoChatRoomGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PhotoChatRoomGroupByOutputType[P]>
+            : GetScalarType<T[P], PhotoChatRoomGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PhotoChatRoomSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    chatRoomId?: boolean
+    url?: boolean
+    thumbnail?: boolean
+    createdAt?: boolean
+    donationRequestId?: boolean
+    chatRoom?: boolean | ChatRoomDefaultArgs<ExtArgs>
+    donationRequest?: boolean | PhotoChatRoom$donationRequestArgs<ExtArgs>
+  }, ExtArgs["result"]["photoChatRoom"]>
+
+  export type PhotoChatRoomSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    chatRoomId?: boolean
+    url?: boolean
+    thumbnail?: boolean
+    createdAt?: boolean
+    donationRequestId?: boolean
+    chatRoom?: boolean | ChatRoomDefaultArgs<ExtArgs>
+    donationRequest?: boolean | PhotoChatRoom$donationRequestArgs<ExtArgs>
+  }, ExtArgs["result"]["photoChatRoom"]>
+
+  export type PhotoChatRoomSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    chatRoomId?: boolean
+    url?: boolean
+    thumbnail?: boolean
+    createdAt?: boolean
+    donationRequestId?: boolean
+    chatRoom?: boolean | ChatRoomDefaultArgs<ExtArgs>
+    donationRequest?: boolean | PhotoChatRoom$donationRequestArgs<ExtArgs>
+  }, ExtArgs["result"]["photoChatRoom"]>
+
+  export type PhotoChatRoomSelectScalar = {
+    id?: boolean
+    chatRoomId?: boolean
+    url?: boolean
+    thumbnail?: boolean
+    createdAt?: boolean
+    donationRequestId?: boolean
+  }
+
+  export type PhotoChatRoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chatRoomId" | "url" | "thumbnail" | "createdAt" | "donationRequestId", ExtArgs["result"]["photoChatRoom"]>
+  export type PhotoChatRoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chatRoom?: boolean | ChatRoomDefaultArgs<ExtArgs>
+    donationRequest?: boolean | PhotoChatRoom$donationRequestArgs<ExtArgs>
+  }
+  export type PhotoChatRoomIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chatRoom?: boolean | ChatRoomDefaultArgs<ExtArgs>
+    donationRequest?: boolean | PhotoChatRoom$donationRequestArgs<ExtArgs>
+  }
+  export type PhotoChatRoomIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chatRoom?: boolean | ChatRoomDefaultArgs<ExtArgs>
+    donationRequest?: boolean | PhotoChatRoom$donationRequestArgs<ExtArgs>
+  }
+
+  export type $PhotoChatRoomPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PhotoChatRoom"
+    objects: {
+      chatRoom: Prisma.$ChatRoomPayload<ExtArgs>
+      donationRequest: Prisma.$DonationRequestPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      chatRoomId: string
+      url: string
+      thumbnail: string | null
+      createdAt: Date
+      donationRequestId: string | null
+    }, ExtArgs["result"]["photoChatRoom"]>
+    composites: {}
+  }
+
+  type PhotoChatRoomGetPayload<S extends boolean | null | undefined | PhotoChatRoomDefaultArgs> = $Result.GetResult<Prisma.$PhotoChatRoomPayload, S>
+
+  type PhotoChatRoomCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PhotoChatRoomFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PhotoChatRoomCountAggregateInputType | true
+    }
+
+  export interface PhotoChatRoomDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PhotoChatRoom'], meta: { name: 'PhotoChatRoom' } }
+    /**
+     * Find zero or one PhotoChatRoom that matches the filter.
+     * @param {PhotoChatRoomFindUniqueArgs} args - Arguments to find a PhotoChatRoom
+     * @example
+     * // Get one PhotoChatRoom
+     * const photoChatRoom = await prisma.photoChatRoom.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PhotoChatRoomFindUniqueArgs>(args: SelectSubset<T, PhotoChatRoomFindUniqueArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PhotoChatRoom that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PhotoChatRoomFindUniqueOrThrowArgs} args - Arguments to find a PhotoChatRoom
+     * @example
+     * // Get one PhotoChatRoom
+     * const photoChatRoom = await prisma.photoChatRoom.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PhotoChatRoomFindUniqueOrThrowArgs>(args: SelectSubset<T, PhotoChatRoomFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PhotoChatRoom that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotoChatRoomFindFirstArgs} args - Arguments to find a PhotoChatRoom
+     * @example
+     * // Get one PhotoChatRoom
+     * const photoChatRoom = await prisma.photoChatRoom.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PhotoChatRoomFindFirstArgs>(args?: SelectSubset<T, PhotoChatRoomFindFirstArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PhotoChatRoom that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotoChatRoomFindFirstOrThrowArgs} args - Arguments to find a PhotoChatRoom
+     * @example
+     * // Get one PhotoChatRoom
+     * const photoChatRoom = await prisma.photoChatRoom.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PhotoChatRoomFindFirstOrThrowArgs>(args?: SelectSubset<T, PhotoChatRoomFindFirstOrThrowArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PhotoChatRooms that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotoChatRoomFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PhotoChatRooms
+     * const photoChatRooms = await prisma.photoChatRoom.findMany()
+     * 
+     * // Get first 10 PhotoChatRooms
+     * const photoChatRooms = await prisma.photoChatRoom.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const photoChatRoomWithIdOnly = await prisma.photoChatRoom.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PhotoChatRoomFindManyArgs>(args?: SelectSubset<T, PhotoChatRoomFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PhotoChatRoom.
+     * @param {PhotoChatRoomCreateArgs} args - Arguments to create a PhotoChatRoom.
+     * @example
+     * // Create one PhotoChatRoom
+     * const PhotoChatRoom = await prisma.photoChatRoom.create({
+     *   data: {
+     *     // ... data to create a PhotoChatRoom
+     *   }
+     * })
+     * 
+     */
+    create<T extends PhotoChatRoomCreateArgs>(args: SelectSubset<T, PhotoChatRoomCreateArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PhotoChatRooms.
+     * @param {PhotoChatRoomCreateManyArgs} args - Arguments to create many PhotoChatRooms.
+     * @example
+     * // Create many PhotoChatRooms
+     * const photoChatRoom = await prisma.photoChatRoom.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PhotoChatRoomCreateManyArgs>(args?: SelectSubset<T, PhotoChatRoomCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PhotoChatRooms and returns the data saved in the database.
+     * @param {PhotoChatRoomCreateManyAndReturnArgs} args - Arguments to create many PhotoChatRooms.
+     * @example
+     * // Create many PhotoChatRooms
+     * const photoChatRoom = await prisma.photoChatRoom.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PhotoChatRooms and only return the `id`
+     * const photoChatRoomWithIdOnly = await prisma.photoChatRoom.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PhotoChatRoomCreateManyAndReturnArgs>(args?: SelectSubset<T, PhotoChatRoomCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PhotoChatRoom.
+     * @param {PhotoChatRoomDeleteArgs} args - Arguments to delete one PhotoChatRoom.
+     * @example
+     * // Delete one PhotoChatRoom
+     * const PhotoChatRoom = await prisma.photoChatRoom.delete({
+     *   where: {
+     *     // ... filter to delete one PhotoChatRoom
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PhotoChatRoomDeleteArgs>(args: SelectSubset<T, PhotoChatRoomDeleteArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PhotoChatRoom.
+     * @param {PhotoChatRoomUpdateArgs} args - Arguments to update one PhotoChatRoom.
+     * @example
+     * // Update one PhotoChatRoom
+     * const photoChatRoom = await prisma.photoChatRoom.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PhotoChatRoomUpdateArgs>(args: SelectSubset<T, PhotoChatRoomUpdateArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PhotoChatRooms.
+     * @param {PhotoChatRoomDeleteManyArgs} args - Arguments to filter PhotoChatRooms to delete.
+     * @example
+     * // Delete a few PhotoChatRooms
+     * const { count } = await prisma.photoChatRoom.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PhotoChatRoomDeleteManyArgs>(args?: SelectSubset<T, PhotoChatRoomDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PhotoChatRooms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotoChatRoomUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PhotoChatRooms
+     * const photoChatRoom = await prisma.photoChatRoom.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PhotoChatRoomUpdateManyArgs>(args: SelectSubset<T, PhotoChatRoomUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PhotoChatRooms and returns the data updated in the database.
+     * @param {PhotoChatRoomUpdateManyAndReturnArgs} args - Arguments to update many PhotoChatRooms.
+     * @example
+     * // Update many PhotoChatRooms
+     * const photoChatRoom = await prisma.photoChatRoom.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PhotoChatRooms and only return the `id`
+     * const photoChatRoomWithIdOnly = await prisma.photoChatRoom.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PhotoChatRoomUpdateManyAndReturnArgs>(args: SelectSubset<T, PhotoChatRoomUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PhotoChatRoom.
+     * @param {PhotoChatRoomUpsertArgs} args - Arguments to update or create a PhotoChatRoom.
+     * @example
+     * // Update or create a PhotoChatRoom
+     * const photoChatRoom = await prisma.photoChatRoom.upsert({
+     *   create: {
+     *     // ... data to create a PhotoChatRoom
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PhotoChatRoom we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PhotoChatRoomUpsertArgs>(args: SelectSubset<T, PhotoChatRoomUpsertArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PhotoChatRooms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotoChatRoomCountArgs} args - Arguments to filter PhotoChatRooms to count.
+     * @example
+     * // Count the number of PhotoChatRooms
+     * const count = await prisma.photoChatRoom.count({
+     *   where: {
+     *     // ... the filter for the PhotoChatRooms we want to count
+     *   }
+     * })
+    **/
+    count<T extends PhotoChatRoomCountArgs>(
+      args?: Subset<T, PhotoChatRoomCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PhotoChatRoomCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PhotoChatRoom.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotoChatRoomAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PhotoChatRoomAggregateArgs>(args: Subset<T, PhotoChatRoomAggregateArgs>): Prisma.PrismaPromise<GetPhotoChatRoomAggregateType<T>>
+
+    /**
+     * Group by PhotoChatRoom.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotoChatRoomGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PhotoChatRoomGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PhotoChatRoomGroupByArgs['orderBy'] }
+        : { orderBy?: PhotoChatRoomGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PhotoChatRoomGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPhotoChatRoomGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PhotoChatRoom model
+   */
+  readonly fields: PhotoChatRoomFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PhotoChatRoom.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PhotoChatRoomClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    chatRoom<T extends ChatRoomDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChatRoomDefaultArgs<ExtArgs>>): Prisma__ChatRoomClient<$Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    donationRequest<T extends PhotoChatRoom$donationRequestArgs<ExtArgs> = {}>(args?: Subset<T, PhotoChatRoom$donationRequestArgs<ExtArgs>>): Prisma__DonationRequestClient<$Result.GetResult<Prisma.$DonationRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PhotoChatRoom model
+   */
+  interface PhotoChatRoomFieldRefs {
+    readonly id: FieldRef<"PhotoChatRoom", 'String'>
+    readonly chatRoomId: FieldRef<"PhotoChatRoom", 'String'>
+    readonly url: FieldRef<"PhotoChatRoom", 'String'>
+    readonly thumbnail: FieldRef<"PhotoChatRoom", 'String'>
+    readonly createdAt: FieldRef<"PhotoChatRoom", 'DateTime'>
+    readonly donationRequestId: FieldRef<"PhotoChatRoom", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PhotoChatRoom findUnique
+   */
+  export type PhotoChatRoomFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which PhotoChatRoom to fetch.
+     */
+    where: PhotoChatRoomWhereUniqueInput
+  }
+
+  /**
+   * PhotoChatRoom findUniqueOrThrow
+   */
+  export type PhotoChatRoomFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which PhotoChatRoom to fetch.
+     */
+    where: PhotoChatRoomWhereUniqueInput
+  }
+
+  /**
+   * PhotoChatRoom findFirst
+   */
+  export type PhotoChatRoomFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which PhotoChatRoom to fetch.
+     */
+    where?: PhotoChatRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PhotoChatRooms to fetch.
+     */
+    orderBy?: PhotoChatRoomOrderByWithRelationInput | PhotoChatRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PhotoChatRooms.
+     */
+    cursor?: PhotoChatRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PhotoChatRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PhotoChatRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PhotoChatRooms.
+     */
+    distinct?: PhotoChatRoomScalarFieldEnum | PhotoChatRoomScalarFieldEnum[]
+  }
+
+  /**
+   * PhotoChatRoom findFirstOrThrow
+   */
+  export type PhotoChatRoomFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which PhotoChatRoom to fetch.
+     */
+    where?: PhotoChatRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PhotoChatRooms to fetch.
+     */
+    orderBy?: PhotoChatRoomOrderByWithRelationInput | PhotoChatRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PhotoChatRooms.
+     */
+    cursor?: PhotoChatRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PhotoChatRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PhotoChatRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PhotoChatRooms.
+     */
+    distinct?: PhotoChatRoomScalarFieldEnum | PhotoChatRoomScalarFieldEnum[]
+  }
+
+  /**
+   * PhotoChatRoom findMany
+   */
+  export type PhotoChatRoomFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which PhotoChatRooms to fetch.
+     */
+    where?: PhotoChatRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PhotoChatRooms to fetch.
+     */
+    orderBy?: PhotoChatRoomOrderByWithRelationInput | PhotoChatRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PhotoChatRooms.
+     */
+    cursor?: PhotoChatRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PhotoChatRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PhotoChatRooms.
+     */
+    skip?: number
+    distinct?: PhotoChatRoomScalarFieldEnum | PhotoChatRoomScalarFieldEnum[]
+  }
+
+  /**
+   * PhotoChatRoom create
+   */
+  export type PhotoChatRoomCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PhotoChatRoom.
+     */
+    data: XOR<PhotoChatRoomCreateInput, PhotoChatRoomUncheckedCreateInput>
+  }
+
+  /**
+   * PhotoChatRoom createMany
+   */
+  export type PhotoChatRoomCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PhotoChatRooms.
+     */
+    data: PhotoChatRoomCreateManyInput | PhotoChatRoomCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PhotoChatRoom createManyAndReturn
+   */
+  export type PhotoChatRoomCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * The data used to create many PhotoChatRooms.
+     */
+    data: PhotoChatRoomCreateManyInput | PhotoChatRoomCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PhotoChatRoom update
+   */
+  export type PhotoChatRoomUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PhotoChatRoom.
+     */
+    data: XOR<PhotoChatRoomUpdateInput, PhotoChatRoomUncheckedUpdateInput>
+    /**
+     * Choose, which PhotoChatRoom to update.
+     */
+    where: PhotoChatRoomWhereUniqueInput
+  }
+
+  /**
+   * PhotoChatRoom updateMany
+   */
+  export type PhotoChatRoomUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PhotoChatRooms.
+     */
+    data: XOR<PhotoChatRoomUpdateManyMutationInput, PhotoChatRoomUncheckedUpdateManyInput>
+    /**
+     * Filter which PhotoChatRooms to update
+     */
+    where?: PhotoChatRoomWhereInput
+    /**
+     * Limit how many PhotoChatRooms to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PhotoChatRoom updateManyAndReturn
+   */
+  export type PhotoChatRoomUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * The data used to update PhotoChatRooms.
+     */
+    data: XOR<PhotoChatRoomUpdateManyMutationInput, PhotoChatRoomUncheckedUpdateManyInput>
+    /**
+     * Filter which PhotoChatRooms to update
+     */
+    where?: PhotoChatRoomWhereInput
+    /**
+     * Limit how many PhotoChatRooms to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PhotoChatRoom upsert
+   */
+  export type PhotoChatRoomUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PhotoChatRoom to update in case it exists.
+     */
+    where: PhotoChatRoomWhereUniqueInput
+    /**
+     * In case the PhotoChatRoom found by the `where` argument doesn't exist, create a new PhotoChatRoom with this data.
+     */
+    create: XOR<PhotoChatRoomCreateInput, PhotoChatRoomUncheckedCreateInput>
+    /**
+     * In case the PhotoChatRoom was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PhotoChatRoomUpdateInput, PhotoChatRoomUncheckedUpdateInput>
+  }
+
+  /**
+   * PhotoChatRoom delete
+   */
+  export type PhotoChatRoomDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    /**
+     * Filter which PhotoChatRoom to delete.
+     */
+    where: PhotoChatRoomWhereUniqueInput
+  }
+
+  /**
+   * PhotoChatRoom deleteMany
+   */
+  export type PhotoChatRoomDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PhotoChatRooms to delete
+     */
+    where?: PhotoChatRoomWhereInput
+    /**
+     * Limit how many PhotoChatRooms to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PhotoChatRoom.donationRequest
+   */
+  export type PhotoChatRoom$donationRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DonationRequest
+     */
+    select?: DonationRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DonationRequest
+     */
+    omit?: DonationRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DonationRequestInclude<ExtArgs> | null
+    where?: DonationRequestWhereInput
+  }
+
+  /**
+   * PhotoChatRoom without action
+   */
+  export type PhotoChatRoomDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
   }
 
 
@@ -12605,6 +13844,7 @@ export namespace Prisma {
     requestment?: boolean | ChatRoom$requestmentArgs<ExtArgs>
     members?: boolean | ChatRoom$membersArgs<ExtArgs>
     chats?: boolean | ChatRoom$chatsArgs<ExtArgs>
+    photo?: boolean | ChatRoom$photoArgs<ExtArgs>
     _count?: boolean | ChatRoomCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chatRoom"]>
 
@@ -12663,6 +13903,7 @@ export namespace Prisma {
     requestment?: boolean | ChatRoom$requestmentArgs<ExtArgs>
     members?: boolean | ChatRoom$membersArgs<ExtArgs>
     chats?: boolean | ChatRoom$chatsArgs<ExtArgs>
+    photo?: boolean | ChatRoom$photoArgs<ExtArgs>
     _count?: boolean | ChatRoomCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ChatRoomIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12684,6 +13925,7 @@ export namespace Prisma {
       requestment: Prisma.$DonationRequestmentPayload<ExtArgs> | null
       members: Prisma.$ChatRoomMemberPayload<ExtArgs>[]
       chats: Prisma.$ChatPayload<ExtArgs>[]
+      photo: Prisma.$PhotoChatRoomPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13096,6 +14338,7 @@ export namespace Prisma {
     requestment<T extends ChatRoom$requestmentArgs<ExtArgs> = {}>(args?: Subset<T, ChatRoom$requestmentArgs<ExtArgs>>): Prisma__DonationRequestmentClient<$Result.GetResult<Prisma.$DonationRequestmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     members<T extends ChatRoom$membersArgs<ExtArgs> = {}>(args?: Subset<T, ChatRoom$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatRoomMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chats<T extends ChatRoom$chatsArgs<ExtArgs> = {}>(args?: Subset<T, ChatRoom$chatsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    photo<T extends ChatRoom$photoArgs<ExtArgs> = {}>(args?: Subset<T, ChatRoom$photoArgs<ExtArgs>>): Prisma__PhotoChatRoomClient<$Result.GetResult<Prisma.$PhotoChatRoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13615,6 +14858,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChatScalarFieldEnum | ChatScalarFieldEnum[]
+  }
+
+  /**
+   * ChatRoom.photo
+   */
+  export type ChatRoom$photoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PhotoChatRoom
+     */
+    select?: PhotoChatRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PhotoChatRoom
+     */
+    omit?: PhotoChatRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PhotoChatRoomInclude<ExtArgs> | null
+    where?: PhotoChatRoomWhereInput
   }
 
   /**
@@ -16854,7 +18116,7 @@ export namespace Prisma {
   export const NotificationScalarFieldEnum: {
     id: 'id',
     notification: 'notification',
-    uuid: 'uuid',
+    token: 'token',
     userid: 'userid',
     notifType: 'notifType',
     createdAt: 'createdAt',
@@ -16912,6 +18174,18 @@ export namespace Prisma {
   };
 
   export type PhotoDonationScalarFieldEnum = (typeof PhotoDonationScalarFieldEnum)[keyof typeof PhotoDonationScalarFieldEnum]
+
+
+  export const PhotoChatRoomScalarFieldEnum: {
+    id: 'id',
+    chatRoomId: 'chatRoomId',
+    url: 'url',
+    thumbnail: 'thumbnail',
+    createdAt: 'createdAt',
+    donationRequestId: 'donationRequestId'
+  };
+
+  export type PhotoChatRoomScalarFieldEnum = (typeof PhotoChatRoomScalarFieldEnum)[keyof typeof PhotoChatRoomScalarFieldEnum]
 
 
   export const DonationFulfillmentScalarFieldEnum: {
@@ -17090,6 +18364,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'NotificationType'
+   */
+  export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
+    
+
+
+  /**
+   * Reference to a field of type 'NotificationType[]'
+   */
+  export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -17208,9 +18496,9 @@ export namespace Prisma {
     NOT?: NotificationWhereInput | NotificationWhereInput[]
     id?: StringFilter<"Notification"> | string
     notification?: StringFilter<"Notification"> | string
-    uuid?: StringNullableFilter<"Notification"> | string | null
+    token?: StringNullableFilter<"Notification"> | string | null
     userid?: StringFilter<"Notification"> | string
-    notifType?: StringFilter<"Notification"> | string
+    notifType?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
     createdAt?: DateTimeFilter<"Notification"> | Date | string
     updatedAt?: DateTimeFilter<"Notification"> | Date | string
   }
@@ -17218,7 +18506,7 @@ export namespace Prisma {
   export type NotificationOrderByWithRelationInput = {
     id?: SortOrder
     notification?: SortOrder
-    uuid?: SortOrderInput | SortOrder
+    token?: SortOrderInput | SortOrder
     userid?: SortOrder
     notifType?: SortOrder
     createdAt?: SortOrder
@@ -17231,9 +18519,9 @@ export namespace Prisma {
     OR?: NotificationWhereInput[]
     NOT?: NotificationWhereInput | NotificationWhereInput[]
     notification?: StringFilter<"Notification"> | string
-    uuid?: StringNullableFilter<"Notification"> | string | null
+    token?: StringNullableFilter<"Notification"> | string | null
     userid?: StringFilter<"Notification"> | string
-    notifType?: StringFilter<"Notification"> | string
+    notifType?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
     createdAt?: DateTimeFilter<"Notification"> | Date | string
     updatedAt?: DateTimeFilter<"Notification"> | Date | string
   }, "id">
@@ -17241,7 +18529,7 @@ export namespace Prisma {
   export type NotificationOrderByWithAggregationInput = {
     id?: SortOrder
     notification?: SortOrder
-    uuid?: SortOrderInput | SortOrder
+    token?: SortOrderInput | SortOrder
     userid?: SortOrder
     notifType?: SortOrder
     createdAt?: SortOrder
@@ -17257,9 +18545,9 @@ export namespace Prisma {
     NOT?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Notification"> | string
     notification?: StringWithAggregatesFilter<"Notification"> | string
-    uuid?: StringNullableWithAggregatesFilter<"Notification"> | string | null
+    token?: StringNullableWithAggregatesFilter<"Notification"> | string | null
     userid?: StringWithAggregatesFilter<"Notification"> | string
-    notifType?: StringWithAggregatesFilter<"Notification"> | string
+    notifType?: EnumNotificationTypeWithAggregatesFilter<"Notification"> | $Enums.NotificationType
     createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
   }
@@ -17360,6 +18648,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentListRelationFilter
     chatRooms?: ChatRoomListRelationFilter
     donationRequestments?: DonationRequestmentListRelationFilter
+    photoChatRooms?: PhotoChatRoomListRelationFilter
   }
 
   export type DonationRequestOrderByWithRelationInput = {
@@ -17386,6 +18675,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentOrderByRelationAggregateInput
     chatRooms?: ChatRoomOrderByRelationAggregateInput
     donationRequestments?: DonationRequestmentOrderByRelationAggregateInput
+    photoChatRooms?: PhotoChatRoomOrderByRelationAggregateInput
   }
 
   export type DonationRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -17416,6 +18706,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentListRelationFilter
     chatRooms?: ChatRoomListRelationFilter
     donationRequestments?: DonationRequestmentListRelationFilter
+    photoChatRooms?: PhotoChatRoomListRelationFilter
   }, "id" | "detailBarang_itemType_alasanDonasi_requestorFirebaseId">
 
   export type DonationRequestOrderByWithAggregationInput = {
@@ -17523,6 +18814,69 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"PhotoDonation"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PhotoDonation"> | Date | string
     donationRequestId?: StringWithAggregatesFilter<"PhotoDonation"> | string
+  }
+
+  export type PhotoChatRoomWhereInput = {
+    AND?: PhotoChatRoomWhereInput | PhotoChatRoomWhereInput[]
+    OR?: PhotoChatRoomWhereInput[]
+    NOT?: PhotoChatRoomWhereInput | PhotoChatRoomWhereInput[]
+    id?: StringFilter<"PhotoChatRoom"> | string
+    chatRoomId?: StringFilter<"PhotoChatRoom"> | string
+    url?: StringFilter<"PhotoChatRoom"> | string
+    thumbnail?: StringNullableFilter<"PhotoChatRoom"> | string | null
+    createdAt?: DateTimeFilter<"PhotoChatRoom"> | Date | string
+    donationRequestId?: StringNullableFilter<"PhotoChatRoom"> | string | null
+    chatRoom?: XOR<ChatRoomScalarRelationFilter, ChatRoomWhereInput>
+    donationRequest?: XOR<DonationRequestNullableScalarRelationFilter, DonationRequestWhereInput> | null
+  }
+
+  export type PhotoChatRoomOrderByWithRelationInput = {
+    id?: SortOrder
+    chatRoomId?: SortOrder
+    url?: SortOrder
+    thumbnail?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    donationRequestId?: SortOrderInput | SortOrder
+    chatRoom?: ChatRoomOrderByWithRelationInput
+    donationRequest?: DonationRequestOrderByWithRelationInput
+  }
+
+  export type PhotoChatRoomWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    chatRoomId?: string
+    AND?: PhotoChatRoomWhereInput | PhotoChatRoomWhereInput[]
+    OR?: PhotoChatRoomWhereInput[]
+    NOT?: PhotoChatRoomWhereInput | PhotoChatRoomWhereInput[]
+    url?: StringFilter<"PhotoChatRoom"> | string
+    thumbnail?: StringNullableFilter<"PhotoChatRoom"> | string | null
+    createdAt?: DateTimeFilter<"PhotoChatRoom"> | Date | string
+    donationRequestId?: StringNullableFilter<"PhotoChatRoom"> | string | null
+    chatRoom?: XOR<ChatRoomScalarRelationFilter, ChatRoomWhereInput>
+    donationRequest?: XOR<DonationRequestNullableScalarRelationFilter, DonationRequestWhereInput> | null
+  }, "id" | "chatRoomId">
+
+  export type PhotoChatRoomOrderByWithAggregationInput = {
+    id?: SortOrder
+    chatRoomId?: SortOrder
+    url?: SortOrder
+    thumbnail?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    donationRequestId?: SortOrderInput | SortOrder
+    _count?: PhotoChatRoomCountOrderByAggregateInput
+    _max?: PhotoChatRoomMaxOrderByAggregateInput
+    _min?: PhotoChatRoomMinOrderByAggregateInput
+  }
+
+  export type PhotoChatRoomScalarWhereWithAggregatesInput = {
+    AND?: PhotoChatRoomScalarWhereWithAggregatesInput | PhotoChatRoomScalarWhereWithAggregatesInput[]
+    OR?: PhotoChatRoomScalarWhereWithAggregatesInput[]
+    NOT?: PhotoChatRoomScalarWhereWithAggregatesInput | PhotoChatRoomScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PhotoChatRoom"> | string
+    chatRoomId?: StringWithAggregatesFilter<"PhotoChatRoom"> | string
+    url?: StringWithAggregatesFilter<"PhotoChatRoom"> | string
+    thumbnail?: StringNullableWithAggregatesFilter<"PhotoChatRoom"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PhotoChatRoom"> | Date | string
+    donationRequestId?: StringNullableWithAggregatesFilter<"PhotoChatRoom"> | string | null
   }
 
   export type DonationFulfillmentWhereInput = {
@@ -17900,6 +19254,7 @@ export namespace Prisma {
     requestment?: XOR<DonationRequestmentNullableScalarRelationFilter, DonationRequestmentWhereInput> | null
     members?: ChatRoomMemberListRelationFilter
     chats?: ChatListRelationFilter
+    photo?: XOR<PhotoChatRoomNullableScalarRelationFilter, PhotoChatRoomWhereInput> | null
   }
 
   export type ChatRoomOrderByWithRelationInput = {
@@ -17919,6 +19274,7 @@ export namespace Prisma {
     requestment?: DonationRequestmentOrderByWithRelationInput
     members?: ChatRoomMemberOrderByRelationAggregateInput
     chats?: ChatOrderByRelationAggregateInput
+    photo?: PhotoChatRoomOrderByWithRelationInput
   }
 
   export type ChatRoomWhereUniqueInput = Prisma.AtLeast<{
@@ -17941,6 +19297,7 @@ export namespace Prisma {
     requestment?: XOR<DonationRequestmentNullableScalarRelationFilter, DonationRequestmentWhereInput> | null
     members?: ChatRoomMemberListRelationFilter
     chats?: ChatListRelationFilter
+    photo?: XOR<PhotoChatRoomNullableScalarRelationFilter, PhotoChatRoomWhereInput> | null
   }, "id" | "roomId" | "fulfillmentId" | "requestmentId">
 
   export type ChatRoomOrderByWithAggregationInput = {
@@ -18205,9 +19562,9 @@ export namespace Prisma {
   export type NotificationCreateInput = {
     id?: string
     notification: string
-    uuid?: string | null
+    token?: string | null
     userid: string
-    notifType: string
+    notifType: $Enums.NotificationType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18215,9 +19572,9 @@ export namespace Prisma {
   export type NotificationUncheckedCreateInput = {
     id?: string
     notification: string
-    uuid?: string | null
+    token?: string | null
     userid: string
-    notifType: string
+    notifType: $Enums.NotificationType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18225,9 +19582,9 @@ export namespace Prisma {
   export type NotificationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     notification?: StringFieldUpdateOperationsInput | string
-    uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     userid?: StringFieldUpdateOperationsInput | string
-    notifType?: StringFieldUpdateOperationsInput | string
+    notifType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18235,9 +19592,9 @@ export namespace Prisma {
   export type NotificationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     notification?: StringFieldUpdateOperationsInput | string
-    uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     userid?: StringFieldUpdateOperationsInput | string
-    notifType?: StringFieldUpdateOperationsInput | string
+    notifType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18245,9 +19602,9 @@ export namespace Prisma {
   export type NotificationCreateManyInput = {
     id?: string
     notification: string
-    uuid?: string | null
+    token?: string | null
     userid: string
-    notifType: string
+    notifType: $Enums.NotificationType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18255,9 +19612,9 @@ export namespace Prisma {
   export type NotificationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     notification?: StringFieldUpdateOperationsInput | string
-    uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     userid?: StringFieldUpdateOperationsInput | string
-    notifType?: StringFieldUpdateOperationsInput | string
+    notifType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18265,9 +19622,9 @@ export namespace Prisma {
   export type NotificationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     notification?: StringFieldUpdateOperationsInput | string
-    uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     userid?: StringFieldUpdateOperationsInput | string
-    notifType?: StringFieldUpdateOperationsInput | string
+    notifType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18373,6 +19730,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentCreateNestedManyWithoutDonationRequestInput
     chatRooms?: ChatRoomCreateNestedManyWithoutDonationInput
     donationRequestments?: DonationRequestmentCreateNestedManyWithoutDonationRequestInput
+    photoChatRooms?: PhotoChatRoomCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestUncheckedCreateInput = {
@@ -18399,6 +19757,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentUncheckedCreateNestedManyWithoutDonationRequestInput
     chatRooms?: ChatRoomUncheckedCreateNestedManyWithoutDonationInput
     donationRequestments?: DonationRequestmentUncheckedCreateNestedManyWithoutDonationRequestInput
+    photoChatRooms?: PhotoChatRoomUncheckedCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestUpdateInput = {
@@ -18425,6 +19784,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentUpdateManyWithoutDonationRequestNestedInput
     chatRooms?: ChatRoomUpdateManyWithoutDonationNestedInput
     donationRequestments?: DonationRequestmentUpdateManyWithoutDonationRequestNestedInput
+    photoChatRooms?: PhotoChatRoomUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type DonationRequestUncheckedUpdateInput = {
@@ -18451,6 +19811,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentUncheckedUpdateManyWithoutDonationRequestNestedInput
     chatRooms?: ChatRoomUncheckedUpdateManyWithoutDonationNestedInput
     donationRequestments?: DonationRequestmentUncheckedUpdateManyWithoutDonationRequestNestedInput
+    photoChatRooms?: PhotoChatRoomUncheckedUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type DonationRequestCreateManyInput = {
@@ -18572,6 +19933,67 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     donationRequestId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PhotoChatRoomCreateInput = {
+    id?: string
+    url: string
+    thumbnail?: string | null
+    createdAt?: Date | string
+    chatRoom: ChatRoomCreateNestedOneWithoutPhotoInput
+    donationRequest?: DonationRequestCreateNestedOneWithoutPhotoChatRoomsInput
+  }
+
+  export type PhotoChatRoomUncheckedCreateInput = {
+    id?: string
+    chatRoomId: string
+    url: string
+    thumbnail?: string | null
+    createdAt?: Date | string
+    donationRequestId?: string | null
+  }
+
+  export type PhotoChatRoomUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatRoom?: ChatRoomUpdateOneRequiredWithoutPhotoNestedInput
+    donationRequest?: DonationRequestUpdateOneWithoutPhotoChatRoomsNestedInput
+  }
+
+  export type PhotoChatRoomUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chatRoomId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    donationRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PhotoChatRoomCreateManyInput = {
+    id?: string
+    chatRoomId: string
+    url: string
+    thumbnail?: string | null
+    createdAt?: Date | string
+    donationRequestId?: string | null
+  }
+
+  export type PhotoChatRoomUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotoChatRoomUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chatRoomId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    donationRequestId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DonationFulfillmentCreateInput = {
@@ -18998,6 +20420,7 @@ export namespace Prisma {
     requestment?: DonationRequestmentCreateNestedOneWithoutChatRoomInput
     members?: ChatRoomMemberCreateNestedManyWithoutRoomInput
     chats?: ChatCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomUncheckedCreateInput = {
@@ -19014,6 +20437,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: ChatRoomMemberUncheckedCreateNestedManyWithoutRoomInput
     chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomUncheckedCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomUpdateInput = {
@@ -19030,6 +20454,7 @@ export namespace Prisma {
     requestment?: DonationRequestmentUpdateOneWithoutChatRoomNestedInput
     members?: ChatRoomMemberUpdateManyWithoutRoomNestedInput
     chats?: ChatUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomUncheckedUpdateInput = {
@@ -19046,6 +20471,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ChatRoomMemberUncheckedUpdateManyWithoutRoomNestedInput
     chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUncheckedUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomCreateManyInput = {
@@ -19349,6 +20775,13 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type EnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -19357,7 +20790,7 @@ export namespace Prisma {
   export type NotificationCountOrderByAggregateInput = {
     id?: SortOrder
     notification?: SortOrder
-    uuid?: SortOrder
+    token?: SortOrder
     userid?: SortOrder
     notifType?: SortOrder
     createdAt?: SortOrder
@@ -19367,7 +20800,7 @@ export namespace Prisma {
   export type NotificationMaxOrderByAggregateInput = {
     id?: SortOrder
     notification?: SortOrder
-    uuid?: SortOrder
+    token?: SortOrder
     userid?: SortOrder
     notifType?: SortOrder
     createdAt?: SortOrder
@@ -19377,7 +20810,7 @@ export namespace Prisma {
   export type NotificationMinOrderByAggregateInput = {
     id?: SortOrder
     notification?: SortOrder
-    uuid?: SortOrder
+    token?: SortOrder
     userid?: SortOrder
     notifType?: SortOrder
     createdAt?: SortOrder
@@ -19400,6 +20833,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -19525,6 +20968,12 @@ export namespace Prisma {
     none?: DonationRequestmentWhereInput
   }
 
+  export type PhotoChatRoomListRelationFilter = {
+    every?: PhotoChatRoomWhereInput
+    some?: PhotoChatRoomWhereInput
+    none?: PhotoChatRoomWhereInput
+  }
+
   export type PhotoDonationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -19538,6 +20987,10 @@ export namespace Prisma {
   }
 
   export type DonationRequestmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PhotoChatRoomOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19692,6 +21145,43 @@ export namespace Prisma {
     imageFile?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    donationRequestId?: SortOrder
+  }
+
+  export type ChatRoomScalarRelationFilter = {
+    is?: ChatRoomWhereInput
+    isNot?: ChatRoomWhereInput
+  }
+
+  export type DonationRequestNullableScalarRelationFilter = {
+    is?: DonationRequestWhereInput | null
+    isNot?: DonationRequestWhereInput | null
+  }
+
+  export type PhotoChatRoomCountOrderByAggregateInput = {
+    id?: SortOrder
+    chatRoomId?: SortOrder
+    url?: SortOrder
+    thumbnail?: SortOrder
+    createdAt?: SortOrder
+    donationRequestId?: SortOrder
+  }
+
+  export type PhotoChatRoomMaxOrderByAggregateInput = {
+    id?: SortOrder
+    chatRoomId?: SortOrder
+    url?: SortOrder
+    thumbnail?: SortOrder
+    createdAt?: SortOrder
+    donationRequestId?: SortOrder
+  }
+
+  export type PhotoChatRoomMinOrderByAggregateInput = {
+    id?: SortOrder
+    chatRoomId?: SortOrder
+    url?: SortOrder
+    thumbnail?: SortOrder
+    createdAt?: SortOrder
     donationRequestId?: SortOrder
   }
 
@@ -19956,6 +21446,11 @@ export namespace Prisma {
     isNot?: DonationRequestmentWhereInput | null
   }
 
+  export type PhotoChatRoomNullableScalarRelationFilter = {
+    is?: PhotoChatRoomWhereInput | null
+    isNot?: PhotoChatRoomWhereInput | null
+  }
+
   export type ChatRoomCountOrderByAggregateInput = {
     id?: SortOrder
     roomId?: SortOrder
@@ -20025,11 +21520,6 @@ export namespace Prisma {
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
-  }
-
-  export type ChatRoomScalarRelationFilter = {
-    is?: ChatRoomWhereInput
-    isNot?: ChatRoomWhereInput
   }
 
   export type ChatRoomMemberUserIdRoomIdCompoundUniqueInput = {
@@ -20166,6 +21656,10 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type EnumNotificationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.NotificationType
+  }
+
   export type FloatFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -20202,6 +21696,13 @@ export namespace Prisma {
     connect?: DonationRequestmentWhereUniqueInput | DonationRequestmentWhereUniqueInput[]
   }
 
+  export type PhotoChatRoomCreateNestedManyWithoutDonationRequestInput = {
+    create?: XOR<PhotoChatRoomCreateWithoutDonationRequestInput, PhotoChatRoomUncheckedCreateWithoutDonationRequestInput> | PhotoChatRoomCreateWithoutDonationRequestInput[] | PhotoChatRoomUncheckedCreateWithoutDonationRequestInput[]
+    connectOrCreate?: PhotoChatRoomCreateOrConnectWithoutDonationRequestInput | PhotoChatRoomCreateOrConnectWithoutDonationRequestInput[]
+    createMany?: PhotoChatRoomCreateManyDonationRequestInputEnvelope
+    connect?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+  }
+
   export type PhotoDonationUncheckedCreateNestedManyWithoutDonationRequestInput = {
     create?: XOR<PhotoDonationCreateWithoutDonationRequestInput, PhotoDonationUncheckedCreateWithoutDonationRequestInput> | PhotoDonationCreateWithoutDonationRequestInput[] | PhotoDonationUncheckedCreateWithoutDonationRequestInput[]
     connectOrCreate?: PhotoDonationCreateOrConnectWithoutDonationRequestInput | PhotoDonationCreateOrConnectWithoutDonationRequestInput[]
@@ -20228,6 +21729,13 @@ export namespace Prisma {
     connectOrCreate?: DonationRequestmentCreateOrConnectWithoutDonationRequestInput | DonationRequestmentCreateOrConnectWithoutDonationRequestInput[]
     createMany?: DonationRequestmentCreateManyDonationRequestInputEnvelope
     connect?: DonationRequestmentWhereUniqueInput | DonationRequestmentWhereUniqueInput[]
+  }
+
+  export type PhotoChatRoomUncheckedCreateNestedManyWithoutDonationRequestInput = {
+    create?: XOR<PhotoChatRoomCreateWithoutDonationRequestInput, PhotoChatRoomUncheckedCreateWithoutDonationRequestInput> | PhotoChatRoomCreateWithoutDonationRequestInput[] | PhotoChatRoomUncheckedCreateWithoutDonationRequestInput[]
+    connectOrCreate?: PhotoChatRoomCreateOrConnectWithoutDonationRequestInput | PhotoChatRoomCreateOrConnectWithoutDonationRequestInput[]
+    createMany?: PhotoChatRoomCreateManyDonationRequestInputEnvelope
+    connect?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -20302,6 +21810,20 @@ export namespace Prisma {
     deleteMany?: DonationRequestmentScalarWhereInput | DonationRequestmentScalarWhereInput[]
   }
 
+  export type PhotoChatRoomUpdateManyWithoutDonationRequestNestedInput = {
+    create?: XOR<PhotoChatRoomCreateWithoutDonationRequestInput, PhotoChatRoomUncheckedCreateWithoutDonationRequestInput> | PhotoChatRoomCreateWithoutDonationRequestInput[] | PhotoChatRoomUncheckedCreateWithoutDonationRequestInput[]
+    connectOrCreate?: PhotoChatRoomCreateOrConnectWithoutDonationRequestInput | PhotoChatRoomCreateOrConnectWithoutDonationRequestInput[]
+    upsert?: PhotoChatRoomUpsertWithWhereUniqueWithoutDonationRequestInput | PhotoChatRoomUpsertWithWhereUniqueWithoutDonationRequestInput[]
+    createMany?: PhotoChatRoomCreateManyDonationRequestInputEnvelope
+    set?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+    disconnect?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+    delete?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+    connect?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+    update?: PhotoChatRoomUpdateWithWhereUniqueWithoutDonationRequestInput | PhotoChatRoomUpdateWithWhereUniqueWithoutDonationRequestInput[]
+    updateMany?: PhotoChatRoomUpdateManyWithWhereWithoutDonationRequestInput | PhotoChatRoomUpdateManyWithWhereWithoutDonationRequestInput[]
+    deleteMany?: PhotoChatRoomScalarWhereInput | PhotoChatRoomScalarWhereInput[]
+  }
+
   export type PhotoDonationUncheckedUpdateManyWithoutDonationRequestNestedInput = {
     create?: XOR<PhotoDonationCreateWithoutDonationRequestInput, PhotoDonationUncheckedCreateWithoutDonationRequestInput> | PhotoDonationCreateWithoutDonationRequestInput[] | PhotoDonationUncheckedCreateWithoutDonationRequestInput[]
     connectOrCreate?: PhotoDonationCreateOrConnectWithoutDonationRequestInput | PhotoDonationCreateOrConnectWithoutDonationRequestInput[]
@@ -20358,6 +21880,20 @@ export namespace Prisma {
     deleteMany?: DonationRequestmentScalarWhereInput | DonationRequestmentScalarWhereInput[]
   }
 
+  export type PhotoChatRoomUncheckedUpdateManyWithoutDonationRequestNestedInput = {
+    create?: XOR<PhotoChatRoomCreateWithoutDonationRequestInput, PhotoChatRoomUncheckedCreateWithoutDonationRequestInput> | PhotoChatRoomCreateWithoutDonationRequestInput[] | PhotoChatRoomUncheckedCreateWithoutDonationRequestInput[]
+    connectOrCreate?: PhotoChatRoomCreateOrConnectWithoutDonationRequestInput | PhotoChatRoomCreateOrConnectWithoutDonationRequestInput[]
+    upsert?: PhotoChatRoomUpsertWithWhereUniqueWithoutDonationRequestInput | PhotoChatRoomUpsertWithWhereUniqueWithoutDonationRequestInput[]
+    createMany?: PhotoChatRoomCreateManyDonationRequestInputEnvelope
+    set?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+    disconnect?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+    delete?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+    connect?: PhotoChatRoomWhereUniqueInput | PhotoChatRoomWhereUniqueInput[]
+    update?: PhotoChatRoomUpdateWithWhereUniqueWithoutDonationRequestInput | PhotoChatRoomUpdateWithWhereUniqueWithoutDonationRequestInput[]
+    updateMany?: PhotoChatRoomUpdateManyWithWhereWithoutDonationRequestInput | PhotoChatRoomUpdateManyWithWhereWithoutDonationRequestInput[]
+    deleteMany?: PhotoChatRoomScalarWhereInput | PhotoChatRoomScalarWhereInput[]
+  }
+
   export type DonationRequestCreateNestedOneWithoutPhotoDonationsInput = {
     create?: XOR<DonationRequestCreateWithoutPhotoDonationsInput, DonationRequestUncheckedCreateWithoutPhotoDonationsInput>
     connectOrCreate?: DonationRequestCreateOrConnectWithoutPhotoDonationsInput
@@ -20370,6 +21906,36 @@ export namespace Prisma {
     upsert?: DonationRequestUpsertWithoutPhotoDonationsInput
     connect?: DonationRequestWhereUniqueInput
     update?: XOR<XOR<DonationRequestUpdateToOneWithWhereWithoutPhotoDonationsInput, DonationRequestUpdateWithoutPhotoDonationsInput>, DonationRequestUncheckedUpdateWithoutPhotoDonationsInput>
+  }
+
+  export type ChatRoomCreateNestedOneWithoutPhotoInput = {
+    create?: XOR<ChatRoomCreateWithoutPhotoInput, ChatRoomUncheckedCreateWithoutPhotoInput>
+    connectOrCreate?: ChatRoomCreateOrConnectWithoutPhotoInput
+    connect?: ChatRoomWhereUniqueInput
+  }
+
+  export type DonationRequestCreateNestedOneWithoutPhotoChatRoomsInput = {
+    create?: XOR<DonationRequestCreateWithoutPhotoChatRoomsInput, DonationRequestUncheckedCreateWithoutPhotoChatRoomsInput>
+    connectOrCreate?: DonationRequestCreateOrConnectWithoutPhotoChatRoomsInput
+    connect?: DonationRequestWhereUniqueInput
+  }
+
+  export type ChatRoomUpdateOneRequiredWithoutPhotoNestedInput = {
+    create?: XOR<ChatRoomCreateWithoutPhotoInput, ChatRoomUncheckedCreateWithoutPhotoInput>
+    connectOrCreate?: ChatRoomCreateOrConnectWithoutPhotoInput
+    upsert?: ChatRoomUpsertWithoutPhotoInput
+    connect?: ChatRoomWhereUniqueInput
+    update?: XOR<XOR<ChatRoomUpdateToOneWithWhereWithoutPhotoInput, ChatRoomUpdateWithoutPhotoInput>, ChatRoomUncheckedUpdateWithoutPhotoInput>
+  }
+
+  export type DonationRequestUpdateOneWithoutPhotoChatRoomsNestedInput = {
+    create?: XOR<DonationRequestCreateWithoutPhotoChatRoomsInput, DonationRequestUncheckedCreateWithoutPhotoChatRoomsInput>
+    connectOrCreate?: DonationRequestCreateOrConnectWithoutPhotoChatRoomsInput
+    upsert?: DonationRequestUpsertWithoutPhotoChatRoomsInput
+    disconnect?: DonationRequestWhereInput | boolean
+    delete?: DonationRequestWhereInput | boolean
+    connect?: DonationRequestWhereUniqueInput
+    update?: XOR<XOR<DonationRequestUpdateToOneWithWhereWithoutPhotoChatRoomsInput, DonationRequestUpdateWithoutPhotoChatRoomsInput>, DonationRequestUncheckedUpdateWithoutPhotoChatRoomsInput>
   }
 
   export type DonationRequestCreateNestedOneWithoutFulfillmentsInput = {
@@ -20622,6 +22188,12 @@ export namespace Prisma {
     connect?: ChatWhereUniqueInput | ChatWhereUniqueInput[]
   }
 
+  export type PhotoChatRoomCreateNestedOneWithoutChatRoomInput = {
+    create?: XOR<PhotoChatRoomCreateWithoutChatRoomInput, PhotoChatRoomUncheckedCreateWithoutChatRoomInput>
+    connectOrCreate?: PhotoChatRoomCreateOrConnectWithoutChatRoomInput
+    connect?: PhotoChatRoomWhereUniqueInput
+  }
+
   export type ChatRoomMemberUncheckedCreateNestedManyWithoutRoomInput = {
     create?: XOR<ChatRoomMemberCreateWithoutRoomInput, ChatRoomMemberUncheckedCreateWithoutRoomInput> | ChatRoomMemberCreateWithoutRoomInput[] | ChatRoomMemberUncheckedCreateWithoutRoomInput[]
     connectOrCreate?: ChatRoomMemberCreateOrConnectWithoutRoomInput | ChatRoomMemberCreateOrConnectWithoutRoomInput[]
@@ -20634,6 +22206,12 @@ export namespace Prisma {
     connectOrCreate?: ChatCreateOrConnectWithoutRoomInput | ChatCreateOrConnectWithoutRoomInput[]
     createMany?: ChatCreateManyRoomInputEnvelope
     connect?: ChatWhereUniqueInput | ChatWhereUniqueInput[]
+  }
+
+  export type PhotoChatRoomUncheckedCreateNestedOneWithoutChatRoomInput = {
+    create?: XOR<PhotoChatRoomCreateWithoutChatRoomInput, PhotoChatRoomUncheckedCreateWithoutChatRoomInput>
+    connectOrCreate?: PhotoChatRoomCreateOrConnectWithoutChatRoomInput
+    connect?: PhotoChatRoomWhereUniqueInput
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -20700,6 +22278,16 @@ export namespace Prisma {
     deleteMany?: ChatScalarWhereInput | ChatScalarWhereInput[]
   }
 
+  export type PhotoChatRoomUpdateOneWithoutChatRoomNestedInput = {
+    create?: XOR<PhotoChatRoomCreateWithoutChatRoomInput, PhotoChatRoomUncheckedCreateWithoutChatRoomInput>
+    connectOrCreate?: PhotoChatRoomCreateOrConnectWithoutChatRoomInput
+    upsert?: PhotoChatRoomUpsertWithoutChatRoomInput
+    disconnect?: PhotoChatRoomWhereInput | boolean
+    delete?: PhotoChatRoomWhereInput | boolean
+    connect?: PhotoChatRoomWhereUniqueInput
+    update?: XOR<XOR<PhotoChatRoomUpdateToOneWithWhereWithoutChatRoomInput, PhotoChatRoomUpdateWithoutChatRoomInput>, PhotoChatRoomUncheckedUpdateWithoutChatRoomInput>
+  }
+
   export type ChatRoomMemberUncheckedUpdateManyWithoutRoomNestedInput = {
     create?: XOR<ChatRoomMemberCreateWithoutRoomInput, ChatRoomMemberUncheckedCreateWithoutRoomInput> | ChatRoomMemberCreateWithoutRoomInput[] | ChatRoomMemberUncheckedCreateWithoutRoomInput[]
     connectOrCreate?: ChatRoomMemberCreateOrConnectWithoutRoomInput | ChatRoomMemberCreateOrConnectWithoutRoomInput[]
@@ -20726,6 +22314,16 @@ export namespace Prisma {
     update?: ChatUpdateWithWhereUniqueWithoutRoomInput | ChatUpdateWithWhereUniqueWithoutRoomInput[]
     updateMany?: ChatUpdateManyWithWhereWithoutRoomInput | ChatUpdateManyWithWhereWithoutRoomInput[]
     deleteMany?: ChatScalarWhereInput | ChatScalarWhereInput[]
+  }
+
+  export type PhotoChatRoomUncheckedUpdateOneWithoutChatRoomNestedInput = {
+    create?: XOR<PhotoChatRoomCreateWithoutChatRoomInput, PhotoChatRoomUncheckedCreateWithoutChatRoomInput>
+    connectOrCreate?: PhotoChatRoomCreateOrConnectWithoutChatRoomInput
+    upsert?: PhotoChatRoomUpsertWithoutChatRoomInput
+    disconnect?: PhotoChatRoomWhereInput | boolean
+    delete?: PhotoChatRoomWhereInput | boolean
+    connect?: PhotoChatRoomWhereUniqueInput
+    update?: XOR<XOR<PhotoChatRoomUpdateToOneWithWhereWithoutChatRoomInput, PhotoChatRoomUpdateWithoutChatRoomInput>, PhotoChatRoomUncheckedUpdateWithoutChatRoomInput>
   }
 
   export type UserCreateNestedOneWithoutRoomsInput = {
@@ -20911,6 +22509,13 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -20937,6 +22542,16 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
   }
 
   export type NestedFloatFilter<$PrismaModel = never> = {
@@ -21170,6 +22785,7 @@ export namespace Prisma {
     requestment?: DonationRequestmentCreateNestedOneWithoutChatRoomInput
     members?: ChatRoomMemberCreateNestedManyWithoutRoomInput
     chats?: ChatCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomUncheckedCreateWithoutDonationInput = {
@@ -21185,6 +22801,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: ChatRoomMemberUncheckedCreateNestedManyWithoutRoomInput
     chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomUncheckedCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomCreateOrConnectWithoutDonationInput = {
@@ -21236,6 +22853,32 @@ export namespace Prisma {
 
   export type DonationRequestmentCreateManyDonationRequestInputEnvelope = {
     data: DonationRequestmentCreateManyDonationRequestInput | DonationRequestmentCreateManyDonationRequestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PhotoChatRoomCreateWithoutDonationRequestInput = {
+    id?: string
+    url: string
+    thumbnail?: string | null
+    createdAt?: Date | string
+    chatRoom: ChatRoomCreateNestedOneWithoutPhotoInput
+  }
+
+  export type PhotoChatRoomUncheckedCreateWithoutDonationRequestInput = {
+    id?: string
+    chatRoomId: string
+    url: string
+    thumbnail?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PhotoChatRoomCreateOrConnectWithoutDonationRequestInput = {
+    where: PhotoChatRoomWhereUniqueInput
+    create: XOR<PhotoChatRoomCreateWithoutDonationRequestInput, PhotoChatRoomUncheckedCreateWithoutDonationRequestInput>
+  }
+
+  export type PhotoChatRoomCreateManyDonationRequestInputEnvelope = {
+    data: PhotoChatRoomCreateManyDonationRequestInput | PhotoChatRoomCreateManyDonationRequestInput[]
     skipDuplicates?: boolean
   }
 
@@ -21369,6 +23012,34 @@ export namespace Prisma {
     donationRequestId?: StringFilter<"DonationRequestment"> | string
   }
 
+  export type PhotoChatRoomUpsertWithWhereUniqueWithoutDonationRequestInput = {
+    where: PhotoChatRoomWhereUniqueInput
+    update: XOR<PhotoChatRoomUpdateWithoutDonationRequestInput, PhotoChatRoomUncheckedUpdateWithoutDonationRequestInput>
+    create: XOR<PhotoChatRoomCreateWithoutDonationRequestInput, PhotoChatRoomUncheckedCreateWithoutDonationRequestInput>
+  }
+
+  export type PhotoChatRoomUpdateWithWhereUniqueWithoutDonationRequestInput = {
+    where: PhotoChatRoomWhereUniqueInput
+    data: XOR<PhotoChatRoomUpdateWithoutDonationRequestInput, PhotoChatRoomUncheckedUpdateWithoutDonationRequestInput>
+  }
+
+  export type PhotoChatRoomUpdateManyWithWhereWithoutDonationRequestInput = {
+    where: PhotoChatRoomScalarWhereInput
+    data: XOR<PhotoChatRoomUpdateManyMutationInput, PhotoChatRoomUncheckedUpdateManyWithoutDonationRequestInput>
+  }
+
+  export type PhotoChatRoomScalarWhereInput = {
+    AND?: PhotoChatRoomScalarWhereInput | PhotoChatRoomScalarWhereInput[]
+    OR?: PhotoChatRoomScalarWhereInput[]
+    NOT?: PhotoChatRoomScalarWhereInput | PhotoChatRoomScalarWhereInput[]
+    id?: StringFilter<"PhotoChatRoom"> | string
+    chatRoomId?: StringFilter<"PhotoChatRoom"> | string
+    url?: StringFilter<"PhotoChatRoom"> | string
+    thumbnail?: StringNullableFilter<"PhotoChatRoom"> | string | null
+    createdAt?: DateTimeFilter<"PhotoChatRoom"> | Date | string
+    donationRequestId?: StringNullableFilter<"PhotoChatRoom"> | string | null
+  }
+
   export type DonationRequestCreateWithoutPhotoDonationsInput = {
     id?: string
     namaBarang?: string | null
@@ -21392,6 +23063,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentCreateNestedManyWithoutDonationRequestInput
     chatRooms?: ChatRoomCreateNestedManyWithoutDonationInput
     donationRequestments?: DonationRequestmentCreateNestedManyWithoutDonationRequestInput
+    photoChatRooms?: PhotoChatRoomCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestUncheckedCreateWithoutPhotoDonationsInput = {
@@ -21417,6 +23089,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentUncheckedCreateNestedManyWithoutDonationRequestInput
     chatRooms?: ChatRoomUncheckedCreateNestedManyWithoutDonationInput
     donationRequestments?: DonationRequestmentUncheckedCreateNestedManyWithoutDonationRequestInput
+    photoChatRooms?: PhotoChatRoomUncheckedCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestCreateOrConnectWithoutPhotoDonationsInput = {
@@ -21458,6 +23131,7 @@ export namespace Prisma {
     fulfillments?: DonationFulfillmentUpdateManyWithoutDonationRequestNestedInput
     chatRooms?: ChatRoomUpdateManyWithoutDonationNestedInput
     donationRequestments?: DonationRequestmentUpdateManyWithoutDonationRequestNestedInput
+    photoChatRooms?: PhotoChatRoomUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type DonationRequestUncheckedUpdateWithoutPhotoDonationsInput = {
@@ -21480,6 +23154,207 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fulfillments?: DonationFulfillmentUncheckedUpdateManyWithoutDonationRequestNestedInput
+    chatRooms?: ChatRoomUncheckedUpdateManyWithoutDonationNestedInput
+    donationRequestments?: DonationRequestmentUncheckedUpdateManyWithoutDonationRequestNestedInput
+    photoChatRooms?: PhotoChatRoomUncheckedUpdateManyWithoutDonationRequestNestedInput
+  }
+
+  export type ChatRoomCreateWithoutPhotoInput = {
+    id?: string
+    roomId: string
+    isActive?: boolean
+    lastMessage?: string
+    lastSeen?: Date | string
+    unreadCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    donation: DonationRequestCreateNestedOneWithoutChatRoomsInput
+    fulfillment?: DonationFulfillmentCreateNestedOneWithoutChatRoomInput
+    requestment?: DonationRequestmentCreateNestedOneWithoutChatRoomInput
+    members?: ChatRoomMemberCreateNestedManyWithoutRoomInput
+    chats?: ChatCreateNestedManyWithoutRoomInput
+  }
+
+  export type ChatRoomUncheckedCreateWithoutPhotoInput = {
+    id?: string
+    roomId: string
+    donationRequestId: string
+    fulfillmentId?: string | null
+    requestmentId?: string | null
+    isActive?: boolean
+    lastMessage?: string
+    lastSeen?: Date | string
+    unreadCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: ChatRoomMemberUncheckedCreateNestedManyWithoutRoomInput
+    chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+  }
+
+  export type ChatRoomCreateOrConnectWithoutPhotoInput = {
+    where: ChatRoomWhereUniqueInput
+    create: XOR<ChatRoomCreateWithoutPhotoInput, ChatRoomUncheckedCreateWithoutPhotoInput>
+  }
+
+  export type DonationRequestCreateWithoutPhotoChatRoomsInput = {
+    id?: string
+    namaBarang?: string | null
+    requestorFirebaseId: string
+    requestorName: string
+    donationType?: string | null
+    detailBarang?: string | null
+    alasanDonasi?: string | null
+    locationDescription: string
+    latitude?: number | null
+    longitude?: number | null
+    city?: string | null
+    description: string
+    itemType: string
+    itemWeight?: number | null
+    weightUnit?: string | null
+    status?: $Enums.RequestStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiredAt?: Date | string | null
+    photoDonations?: PhotoDonationCreateNestedManyWithoutDonationRequestInput
+    fulfillments?: DonationFulfillmentCreateNestedManyWithoutDonationRequestInput
+    chatRooms?: ChatRoomCreateNestedManyWithoutDonationInput
+    donationRequestments?: DonationRequestmentCreateNestedManyWithoutDonationRequestInput
+  }
+
+  export type DonationRequestUncheckedCreateWithoutPhotoChatRoomsInput = {
+    id?: string
+    namaBarang?: string | null
+    requestorFirebaseId: string
+    requestorName: string
+    donationType?: string | null
+    detailBarang?: string | null
+    alasanDonasi?: string | null
+    locationDescription: string
+    latitude?: number | null
+    longitude?: number | null
+    city?: string | null
+    description: string
+    itemType: string
+    itemWeight?: number | null
+    weightUnit?: string | null
+    status?: $Enums.RequestStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiredAt?: Date | string | null
+    photoDonations?: PhotoDonationUncheckedCreateNestedManyWithoutDonationRequestInput
+    fulfillments?: DonationFulfillmentUncheckedCreateNestedManyWithoutDonationRequestInput
+    chatRooms?: ChatRoomUncheckedCreateNestedManyWithoutDonationInput
+    donationRequestments?: DonationRequestmentUncheckedCreateNestedManyWithoutDonationRequestInput
+  }
+
+  export type DonationRequestCreateOrConnectWithoutPhotoChatRoomsInput = {
+    where: DonationRequestWhereUniqueInput
+    create: XOR<DonationRequestCreateWithoutPhotoChatRoomsInput, DonationRequestUncheckedCreateWithoutPhotoChatRoomsInput>
+  }
+
+  export type ChatRoomUpsertWithoutPhotoInput = {
+    update: XOR<ChatRoomUpdateWithoutPhotoInput, ChatRoomUncheckedUpdateWithoutPhotoInput>
+    create: XOR<ChatRoomCreateWithoutPhotoInput, ChatRoomUncheckedCreateWithoutPhotoInput>
+    where?: ChatRoomWhereInput
+  }
+
+  export type ChatRoomUpdateToOneWithWhereWithoutPhotoInput = {
+    where?: ChatRoomWhereInput
+    data: XOR<ChatRoomUpdateWithoutPhotoInput, ChatRoomUncheckedUpdateWithoutPhotoInput>
+  }
+
+  export type ChatRoomUpdateWithoutPhotoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roomId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastMessage?: StringFieldUpdateOperationsInput | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    unreadCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    donation?: DonationRequestUpdateOneRequiredWithoutChatRoomsNestedInput
+    fulfillment?: DonationFulfillmentUpdateOneWithoutChatRoomNestedInput
+    requestment?: DonationRequestmentUpdateOneWithoutChatRoomNestedInput
+    members?: ChatRoomMemberUpdateManyWithoutRoomNestedInput
+    chats?: ChatUpdateManyWithoutRoomNestedInput
+  }
+
+  export type ChatRoomUncheckedUpdateWithoutPhotoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roomId?: StringFieldUpdateOperationsInput | string
+    donationRequestId?: StringFieldUpdateOperationsInput | string
+    fulfillmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    requestmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastMessage?: StringFieldUpdateOperationsInput | string
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    unreadCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: ChatRoomMemberUncheckedUpdateManyWithoutRoomNestedInput
+    chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+  }
+
+  export type DonationRequestUpsertWithoutPhotoChatRoomsInput = {
+    update: XOR<DonationRequestUpdateWithoutPhotoChatRoomsInput, DonationRequestUncheckedUpdateWithoutPhotoChatRoomsInput>
+    create: XOR<DonationRequestCreateWithoutPhotoChatRoomsInput, DonationRequestUncheckedCreateWithoutPhotoChatRoomsInput>
+    where?: DonationRequestWhereInput
+  }
+
+  export type DonationRequestUpdateToOneWithWhereWithoutPhotoChatRoomsInput = {
+    where?: DonationRequestWhereInput
+    data: XOR<DonationRequestUpdateWithoutPhotoChatRoomsInput, DonationRequestUncheckedUpdateWithoutPhotoChatRoomsInput>
+  }
+
+  export type DonationRequestUpdateWithoutPhotoChatRoomsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
+    requestorFirebaseId?: StringFieldUpdateOperationsInput | string
+    requestorName?: StringFieldUpdateOperationsInput | string
+    donationType?: NullableStringFieldUpdateOperationsInput | string | null
+    detailBarang?: NullableStringFieldUpdateOperationsInput | string | null
+    alasanDonasi?: NullableStringFieldUpdateOperationsInput | string | null
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    itemWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    photoDonations?: PhotoDonationUpdateManyWithoutDonationRequestNestedInput
+    fulfillments?: DonationFulfillmentUpdateManyWithoutDonationRequestNestedInput
+    chatRooms?: ChatRoomUpdateManyWithoutDonationNestedInput
+    donationRequestments?: DonationRequestmentUpdateManyWithoutDonationRequestNestedInput
+  }
+
+  export type DonationRequestUncheckedUpdateWithoutPhotoChatRoomsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namaBarang?: NullableStringFieldUpdateOperationsInput | string | null
+    requestorFirebaseId?: StringFieldUpdateOperationsInput | string
+    requestorName?: StringFieldUpdateOperationsInput | string
+    donationType?: NullableStringFieldUpdateOperationsInput | string | null
+    detailBarang?: NullableStringFieldUpdateOperationsInput | string | null
+    alasanDonasi?: NullableStringFieldUpdateOperationsInput | string | null
+    locationDescription?: StringFieldUpdateOperationsInput | string
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    itemWeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    weightUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    photoDonations?: PhotoDonationUncheckedUpdateManyWithoutDonationRequestNestedInput
     fulfillments?: DonationFulfillmentUncheckedUpdateManyWithoutDonationRequestNestedInput
     chatRooms?: ChatRoomUncheckedUpdateManyWithoutDonationNestedInput
     donationRequestments?: DonationRequestmentUncheckedUpdateManyWithoutDonationRequestNestedInput
@@ -21508,6 +23383,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationCreateNestedManyWithoutDonationRequestInput
     chatRooms?: ChatRoomCreateNestedManyWithoutDonationInput
     donationRequestments?: DonationRequestmentCreateNestedManyWithoutDonationRequestInput
+    photoChatRooms?: PhotoChatRoomCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestUncheckedCreateWithoutFulfillmentsInput = {
@@ -21533,6 +23409,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUncheckedCreateNestedManyWithoutDonationRequestInput
     chatRooms?: ChatRoomUncheckedCreateNestedManyWithoutDonationInput
     donationRequestments?: DonationRequestmentUncheckedCreateNestedManyWithoutDonationRequestInput
+    photoChatRooms?: PhotoChatRoomUncheckedCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestCreateOrConnectWithoutFulfillmentsInput = {
@@ -21553,6 +23430,7 @@ export namespace Prisma {
     requestment?: DonationRequestmentCreateNestedOneWithoutChatRoomInput
     members?: ChatRoomMemberCreateNestedManyWithoutRoomInput
     chats?: ChatCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomUncheckedCreateWithoutFulfillmentInput = {
@@ -21568,6 +23446,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: ChatRoomMemberUncheckedCreateNestedManyWithoutRoomInput
     chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomUncheckedCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomCreateOrConnectWithoutFulfillmentInput = {
@@ -21609,6 +23488,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUpdateManyWithoutDonationRequestNestedInput
     chatRooms?: ChatRoomUpdateManyWithoutDonationNestedInput
     donationRequestments?: DonationRequestmentUpdateManyWithoutDonationRequestNestedInput
+    photoChatRooms?: PhotoChatRoomUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type DonationRequestUncheckedUpdateWithoutFulfillmentsInput = {
@@ -21634,6 +23514,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUncheckedUpdateManyWithoutDonationRequestNestedInput
     chatRooms?: ChatRoomUncheckedUpdateManyWithoutDonationNestedInput
     donationRequestments?: DonationRequestmentUncheckedUpdateManyWithoutDonationRequestNestedInput
+    photoChatRooms?: PhotoChatRoomUncheckedUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type ChatRoomUpsertWithoutFulfillmentInput = {
@@ -21660,6 +23541,7 @@ export namespace Prisma {
     requestment?: DonationRequestmentUpdateOneWithoutChatRoomNestedInput
     members?: ChatRoomMemberUpdateManyWithoutRoomNestedInput
     chats?: ChatUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomUncheckedUpdateWithoutFulfillmentInput = {
@@ -21675,6 +23557,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ChatRoomMemberUncheckedUpdateManyWithoutRoomNestedInput
     chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUncheckedUpdateOneWithoutChatRoomNestedInput
   }
 
   export type DonationRequestCreateWithoutDonationRequestmentsInput = {
@@ -21700,6 +23583,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationCreateNestedManyWithoutDonationRequestInput
     fulfillments?: DonationFulfillmentCreateNestedManyWithoutDonationRequestInput
     chatRooms?: ChatRoomCreateNestedManyWithoutDonationInput
+    photoChatRooms?: PhotoChatRoomCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestUncheckedCreateWithoutDonationRequestmentsInput = {
@@ -21725,6 +23609,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUncheckedCreateNestedManyWithoutDonationRequestInput
     fulfillments?: DonationFulfillmentUncheckedCreateNestedManyWithoutDonationRequestInput
     chatRooms?: ChatRoomUncheckedCreateNestedManyWithoutDonationInput
+    photoChatRooms?: PhotoChatRoomUncheckedCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestCreateOrConnectWithoutDonationRequestmentsInput = {
@@ -21745,6 +23630,7 @@ export namespace Prisma {
     fulfillment?: DonationFulfillmentCreateNestedOneWithoutChatRoomInput
     members?: ChatRoomMemberCreateNestedManyWithoutRoomInput
     chats?: ChatCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomUncheckedCreateWithoutRequestmentInput = {
@@ -21760,6 +23646,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: ChatRoomMemberUncheckedCreateNestedManyWithoutRoomInput
     chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomUncheckedCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomCreateOrConnectWithoutRequestmentInput = {
@@ -21801,6 +23688,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUpdateManyWithoutDonationRequestNestedInput
     fulfillments?: DonationFulfillmentUpdateManyWithoutDonationRequestNestedInput
     chatRooms?: ChatRoomUpdateManyWithoutDonationNestedInput
+    photoChatRooms?: PhotoChatRoomUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type DonationRequestUncheckedUpdateWithoutDonationRequestmentsInput = {
@@ -21826,6 +23714,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUncheckedUpdateManyWithoutDonationRequestNestedInput
     fulfillments?: DonationFulfillmentUncheckedUpdateManyWithoutDonationRequestNestedInput
     chatRooms?: ChatRoomUncheckedUpdateManyWithoutDonationNestedInput
+    photoChatRooms?: PhotoChatRoomUncheckedUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type ChatRoomUpsertWithoutRequestmentInput = {
@@ -21852,6 +23741,7 @@ export namespace Prisma {
     fulfillment?: DonationFulfillmentUpdateOneWithoutChatRoomNestedInput
     members?: ChatRoomMemberUpdateManyWithoutRoomNestedInput
     chats?: ChatUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomUncheckedUpdateWithoutRequestmentInput = {
@@ -21867,6 +23757,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ChatRoomMemberUncheckedUpdateManyWithoutRoomNestedInput
     chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUncheckedUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatCreateWithoutSenderInput = {
@@ -22032,6 +23923,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationCreateNestedManyWithoutDonationRequestInput
     fulfillments?: DonationFulfillmentCreateNestedManyWithoutDonationRequestInput
     donationRequestments?: DonationRequestmentCreateNestedManyWithoutDonationRequestInput
+    photoChatRooms?: PhotoChatRoomCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestUncheckedCreateWithoutChatRoomsInput = {
@@ -22057,6 +23949,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUncheckedCreateNestedManyWithoutDonationRequestInput
     fulfillments?: DonationFulfillmentUncheckedCreateNestedManyWithoutDonationRequestInput
     donationRequestments?: DonationRequestmentUncheckedCreateNestedManyWithoutDonationRequestInput
+    photoChatRooms?: PhotoChatRoomUncheckedCreateNestedManyWithoutDonationRequestInput
   }
 
   export type DonationRequestCreateOrConnectWithoutChatRoomsInput = {
@@ -22186,6 +24079,27 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PhotoChatRoomCreateWithoutChatRoomInput = {
+    id?: string
+    url: string
+    thumbnail?: string | null
+    createdAt?: Date | string
+    donationRequest?: DonationRequestCreateNestedOneWithoutPhotoChatRoomsInput
+  }
+
+  export type PhotoChatRoomUncheckedCreateWithoutChatRoomInput = {
+    id?: string
+    url: string
+    thumbnail?: string | null
+    createdAt?: Date | string
+    donationRequestId?: string | null
+  }
+
+  export type PhotoChatRoomCreateOrConnectWithoutChatRoomInput = {
+    where: PhotoChatRoomWhereUniqueInput
+    create: XOR<PhotoChatRoomCreateWithoutChatRoomInput, PhotoChatRoomUncheckedCreateWithoutChatRoomInput>
+  }
+
   export type DonationRequestUpsertWithoutChatRoomsInput = {
     update: XOR<DonationRequestUpdateWithoutChatRoomsInput, DonationRequestUncheckedUpdateWithoutChatRoomsInput>
     create: XOR<DonationRequestCreateWithoutChatRoomsInput, DonationRequestUncheckedCreateWithoutChatRoomsInput>
@@ -22220,6 +24134,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUpdateManyWithoutDonationRequestNestedInput
     fulfillments?: DonationFulfillmentUpdateManyWithoutDonationRequestNestedInput
     donationRequestments?: DonationRequestmentUpdateManyWithoutDonationRequestNestedInput
+    photoChatRooms?: PhotoChatRoomUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type DonationRequestUncheckedUpdateWithoutChatRoomsInput = {
@@ -22245,6 +24160,7 @@ export namespace Prisma {
     photoDonations?: PhotoDonationUncheckedUpdateManyWithoutDonationRequestNestedInput
     fulfillments?: DonationFulfillmentUncheckedUpdateManyWithoutDonationRequestNestedInput
     donationRequestments?: DonationRequestmentUncheckedUpdateManyWithoutDonationRequestNestedInput
+    photoChatRooms?: PhotoChatRoomUncheckedUpdateManyWithoutDonationRequestNestedInput
   }
 
   export type DonationFulfillmentUpsertWithoutChatRoomInput = {
@@ -22365,6 +24281,33 @@ export namespace Prisma {
     data: XOR<ChatUpdateManyMutationInput, ChatUncheckedUpdateManyWithoutRoomInput>
   }
 
+  export type PhotoChatRoomUpsertWithoutChatRoomInput = {
+    update: XOR<PhotoChatRoomUpdateWithoutChatRoomInput, PhotoChatRoomUncheckedUpdateWithoutChatRoomInput>
+    create: XOR<PhotoChatRoomCreateWithoutChatRoomInput, PhotoChatRoomUncheckedCreateWithoutChatRoomInput>
+    where?: PhotoChatRoomWhereInput
+  }
+
+  export type PhotoChatRoomUpdateToOneWithWhereWithoutChatRoomInput = {
+    where?: PhotoChatRoomWhereInput
+    data: XOR<PhotoChatRoomUpdateWithoutChatRoomInput, PhotoChatRoomUncheckedUpdateWithoutChatRoomInput>
+  }
+
+  export type PhotoChatRoomUpdateWithoutChatRoomInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    donationRequest?: DonationRequestUpdateOneWithoutPhotoChatRoomsNestedInput
+  }
+
+  export type PhotoChatRoomUncheckedUpdateWithoutChatRoomInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    donationRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type UserCreateWithoutRoomsInput = {
     id?: string
     name?: string | null
@@ -22419,6 +24362,7 @@ export namespace Prisma {
     fulfillment?: DonationFulfillmentCreateNestedOneWithoutChatRoomInput
     requestment?: DonationRequestmentCreateNestedOneWithoutChatRoomInput
     chats?: ChatCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomUncheckedCreateWithoutMembersInput = {
@@ -22434,6 +24378,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomUncheckedCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomCreateOrConnectWithoutMembersInput = {
@@ -22512,6 +24457,7 @@ export namespace Prisma {
     fulfillment?: DonationFulfillmentUpdateOneWithoutChatRoomNestedInput
     requestment?: DonationRequestmentUpdateOneWithoutChatRoomNestedInput
     chats?: ChatUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomUncheckedUpdateWithoutMembersInput = {
@@ -22527,6 +24473,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUncheckedUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomCreateWithoutChatsInput = {
@@ -22542,6 +24489,7 @@ export namespace Prisma {
     fulfillment?: DonationFulfillmentCreateNestedOneWithoutChatRoomInput
     requestment?: DonationRequestmentCreateNestedOneWithoutChatRoomInput
     members?: ChatRoomMemberCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomUncheckedCreateWithoutChatsInput = {
@@ -22557,6 +24505,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: ChatRoomMemberUncheckedCreateNestedManyWithoutRoomInput
+    photo?: PhotoChatRoomUncheckedCreateNestedOneWithoutChatRoomInput
   }
 
   export type ChatRoomCreateOrConnectWithoutChatsInput = {
@@ -22670,6 +24619,7 @@ export namespace Prisma {
     fulfillment?: DonationFulfillmentUpdateOneWithoutChatRoomNestedInput
     requestment?: DonationRequestmentUpdateOneWithoutChatRoomNestedInput
     members?: ChatRoomMemberUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomUncheckedUpdateWithoutChatsInput = {
@@ -22685,6 +24635,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ChatRoomMemberUncheckedUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUncheckedUpdateOneWithoutChatRoomNestedInput
   }
 
   export type UserUpsertWithoutSentMessagesInput = {
@@ -22819,6 +24770,14 @@ export namespace Prisma {
     city?: string | null
   }
 
+  export type PhotoChatRoomCreateManyDonationRequestInput = {
+    id?: string
+    chatRoomId: string
+    url: string
+    thumbnail?: string | null
+    createdAt?: Date | string
+  }
+
   export type PhotoDonationUpdateWithoutDonationRequestInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageFile?: StringFieldUpdateOperationsInput | string
@@ -22900,6 +24859,7 @@ export namespace Prisma {
     requestment?: DonationRequestmentUpdateOneWithoutChatRoomNestedInput
     members?: ChatRoomMemberUpdateManyWithoutRoomNestedInput
     chats?: ChatUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomUncheckedUpdateWithoutDonationInput = {
@@ -22915,6 +24875,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: ChatRoomMemberUncheckedUpdateManyWithoutRoomNestedInput
     chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+    photo?: PhotoChatRoomUncheckedUpdateOneWithoutChatRoomNestedInput
   }
 
   export type ChatRoomUncheckedUpdateManyWithoutDonationInput = {
@@ -22975,6 +24936,30 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PhotoChatRoomUpdateWithoutDonationRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatRoom?: ChatRoomUpdateOneRequiredWithoutPhotoNestedInput
+  }
+
+  export type PhotoChatRoomUncheckedUpdateWithoutDonationRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chatRoomId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotoChatRoomUncheckedUpdateManyWithoutDonationRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chatRoomId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatCreateManySenderInput = {
