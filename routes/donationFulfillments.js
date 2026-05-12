@@ -206,11 +206,9 @@ router.get("/user/helping", authenticateUser, async (req, res) => {
 
     const donationFulfillments = await prisma.donationFulfillment.findMany({
       where: {
-        OR: [
-          { donorFirebaseId: userId },
-          { donorRequestFirebaseId: userId },
+         donorFirebaseId: userId 
 
-        ]
+        
       },
       orderBy: {
         createdAt: "desc",
