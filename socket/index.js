@@ -2,6 +2,8 @@ const { Server } = require("socket.io");
 const chatRoomEvent = require("./event/chatRoom");
 const chatEvent = require("./event/chat");
 const userEvent = require("./event/user");
+const notifEvent = require("./event/notif");
+
 
 let io;
 
@@ -40,6 +42,7 @@ function initSocket(server) {
       chatRoomEvent(io, socket);
       chatEvent(io, socket);
       userEvent(io, socket);
+      notifEvent(io,socket);
 
       console.log("✅ events loaded");
     } catch (err) {

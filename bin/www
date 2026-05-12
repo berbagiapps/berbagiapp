@@ -8,6 +8,8 @@ var app = require("../app");
 var debug = require("debug")("berbagiexpress:server");
 var http = require("http");
 const { initSocket } = require("../socket");
+const { startScheduler } = require("../scheduler/notifDonation");
+
 
 /**
  * Get port from environment and store in Express.
@@ -25,7 +27,13 @@ initSocket(server);/**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, "0.0.0.0");
+server.listen(port, () => {
+  console.log("Server running");
+
+  // 🔥 START SCHEDULER DI SINI
+  startScheduler();
+});
+// server.listen(port, "0.0.0.0");
 server.on("error", onError);
 server.on("listening", onListening);
 

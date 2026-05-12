@@ -2,6 +2,7 @@ module.exports = (io, socket) => {
 
   // 📩 USER KIRIM PESAN
   socket.on("chat:send", async ({ roomId, senderId, message, clientId }) => {
+    console.log("kepanggil ga");
     if (!roomId || !senderId || !message?.trim()) {
       return socket.emit("chat:error", { message: "Invalid data" });
     }
@@ -23,25 +24,25 @@ module.exports = (io, socket) => {
 
     try {
       // 💾 2. Simpan ke database
-      const savedChat = await prisma.chat.create({
-        data: {
-          roomId,
-          senderId,
-          content: message.trim(),
-          readBy: {
-            connect: { id: senderId },
-          },
-        },
-      });
+      // const savedChat = await prisma.chat.create({
+      //   data: {
+      //     roomId,
+      //     senderId,
+      //     content: message.trim(),
+      //     readBy: {
+      //       connect: { id: senderId },
+      //     },
+      //   },
+      // });
 
       // 🔥 3. Kirim konfirmasi ke client (untuk replace optimistic)
-      io.to(roomId).emit("chat:confirmed", {
-        id: savedChat.id,
-        roomId,
-        senderId,
-        clientId: clientId || null,
-        createdAt: savedChat.createdAt,
-      });
+      // io.to(roomId).emit("chat:confirmed", {
+      //   id: savedChat.id,
+      //   roomId,
+      //   senderId,
+      //   clientId: clientId || null,
+      //   createdAt: savedChat.createdAt,
+      // });
 
     } catch (error) {
       console.error("❌ Error saving chat:", error);

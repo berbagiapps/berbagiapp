@@ -1,7 +1,8 @@
 var express = require("express");
 var router = express.Router();
 // Mundur satu tingkat keluar dari folder 'routes', lalu masuk ke 'src/generated/client'
-const { PrismaClient } = require('../src/generated/client'); const prisma = new PrismaClient();
+const { PrismaClient } = require('../src/generated/client');
+ const prisma = new PrismaClient();
 const authenticateUser = require("../middleware/authMiddleware");
 const sendPushNotification = require("./sendPushNotification");
 

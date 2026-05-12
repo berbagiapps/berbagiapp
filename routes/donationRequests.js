@@ -99,7 +99,7 @@ router.post(
           userId: user.id, // 👈 WAJIB TAMBAH INI
           title: "Donasi berhasil dibuat",
           body: "Permintaan donasi kamu berhasil diposting",
-          notificationType: "CREATE_DONATION", // 👈 WAJIB ENUM
+          notificationType: "DONATION_CREATED", // 👈 WAJIB ENUM
         });
       } res.status(201).json({
         message: "Permintaan donasi berhasil dibuat!",
@@ -336,26 +336,22 @@ router.get("/requested", authenticateUser, async (req, res) => {
       }),
 
       prisma.donationRequestment.count({
-        where: {
-          OR: [
-            {
-              requestorId: userId,
-            },
+        where: 
+          
+            // {
+            //   requestorId: userId,
+            // },
             {
               donationRequest: {
                 is: {
                   requestorFirebaseId: userId,
                 },
               },
-            },
-          ],
+            
+          
         },
       }),
     ]);
-
-
-
-
     return res.status(200).json({
       message: "",
       data: data,
@@ -373,6 +369,10 @@ router.get("/requested", authenticateUser, async (req, res) => {
       .send({ message: "Terjadi kesalahan pada server." });
   }
 });
+
+
+
+
 
 router.get("/user", authenticateUser, async (req, res) => {
   const userId = req.user.id;

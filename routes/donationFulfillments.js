@@ -200,7 +200,7 @@ router.get("/", async (req, res) => {
  * @desc    Mengembalikan semua donasi barang berdasarkan user
  * @access  Private (Harus login)
  */
-router.get("/user", authenticateUser, async (req, res) => {
+router.get("/user/helping", authenticateUser, async (req, res) => {
   const userId = req.user.id;
   try {
 
@@ -242,6 +242,46 @@ router.get("/user", authenticateUser, async (req, res) => {
   }
 });
 
+
+router.get("/user", authenticateUser, async (req, res) => {
+  const userId = req.user.id;
+  try {
+
+    const donationFulfillments = await prisma.donationFulfillment.findMany({
+      where: {
+         donationRequest: {
+          requestorFirebaseId: userId,
+        }, // dumm
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+
+      // 🔥 IMPORTANT: include relation
+      include: {
+        donationRequest: {
+          select: {
+            id: true,
+            itemType: true,
+            alasanDonasi: true,
+            detailBarang: true,
+            status: true,
+            requestorName: true,
+          },
+        },
+      },
+    });
+    console.log("ID dari token:", userId);
+    console.log(donationFulfillments);
+    res.status(200).json({
+      message: "",
+      data: donationFulfillments,
+    });
+  } catch (error) {
+    console.error("Gagal Get /donation-fulfillments/user:", error);
+    res.status(500).send({ message: "Terjadi kesalahan pada server." + error.message });
+  }
+});
 router.get("/by-donation-request", requireQueryParams("donationRequestId"),
   async (req, res) => {
     const { donationRequestId } = req.query;
