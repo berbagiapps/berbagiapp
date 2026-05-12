@@ -110,6 +110,7 @@ router.get("/rooms", authenticateUser, async (req, res) => {
       include: {
         donation: {
           select: {
+            requestorName:true,
             id: true,
             description: true,
             itemType: true,
