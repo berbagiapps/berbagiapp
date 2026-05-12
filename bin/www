@@ -28,7 +28,8 @@ initSocket(server);/**
  */
 
 server.listen(port, () => {
-  console.log("Server running");
+  console.log("Server runnings");
+  console.log("JALAN GAAAAAAAAAAAAAAAA");
 
   // 🔥 START SCHEDULER DI SINI
   startScheduler();
