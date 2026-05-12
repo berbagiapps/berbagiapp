@@ -179,6 +179,8 @@ model User {
   email                String? @unique
   role                 String?
   password             String?
+  latitude             String?
+  longitude            String?
   isActive             Boolean @default(false)
   isDonate             Boolean @default(false)
   isPhotoId            Boolean @default(false)
