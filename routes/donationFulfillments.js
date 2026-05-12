@@ -216,16 +216,7 @@ router.get("/user/helping", authenticateUser, async (req, res) => {
 
       // 🔥 IMPORTANT: include relation
       include: {
-        donationRequest: {
-          select: {
-            id: true,
-            itemType: true,
-            alasanDonasi: true,
-            detailBarang: true,
-            status: true,
-            requestorName: true,
-          },
-        },
+        donationRequest: true
       },
     });
     console.log("ID dari token:", userId);
@@ -257,16 +248,7 @@ router.get("/user", authenticateUser, async (req, res) => {
 
       // 🔥 IMPORTANT: include relation
       include: {
-        donationRequest: {
-          select: {
-            id: true,
-            itemType: true,
-            alasanDonasi: true,
-            detailBarang: true,
-            status: true,
-            requestorName: true,
-          },
-        },
+        donationRequest: true
       },
     });
     console.log("ID dari token:", userId);
