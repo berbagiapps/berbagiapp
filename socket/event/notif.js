@@ -53,4 +53,24 @@ module.exports = (io, socket) => {
       console.error("Socket notification error:", err);
     }
   });
+
+
+  socket.on("location:update", async ({ latitude, longitude, userId }) => {
+
+      console.log(userId);
+
+    try {
+      const user = await prisma.user.update({
+        where: { id: userId },
+        data:{
+          latitude: latitude,
+          longitude:longitude
+        }
+      });
+  
+
+    } catch (err) {
+      console.error("Socket notification error:", err);
+    }
+  });
 };
